@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import RegisterUserModel
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -21,3 +22,18 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return user
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
+        data.update({
+            "user":{
+                "id":"user.id",
+                "email":user.email,
+                "role":user.role,
+            }
+        })
+        return data
