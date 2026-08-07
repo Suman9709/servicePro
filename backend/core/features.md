@@ -2,13 +2,13 @@
 - login ✅
 - logout
 - create engineers ✅
-- update engineers
-- delete engineers
+- update engineers✅
+- delete engineers✅
 - get all engineers✅
 
 
-- create service
-- search service 
+- create service✅
+- search service ✅
 
 - add equipment
 - remove equipment

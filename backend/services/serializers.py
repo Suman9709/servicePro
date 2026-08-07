@@ -16,6 +16,8 @@ class CategorySerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at'
         ]
+        
+        
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceModel
