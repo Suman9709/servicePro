@@ -1,17 +1,18 @@
-from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets
+from django.shortcuts import  get_object_or_404
+
 from rest_framework.permissions import IsAuthenticated
+from accounts.models import RegisterUserModel
 from engineers.models import EngineerProfile
 from engineers.serializers import CreateEngineerSerializer, EngineerProfileSerializer
 
-from accounts.permissions import IsAdmin, IsEngineer
+from accounts.permissions import IsAdmin, IsEngineer,IsEngineerOrAdmin
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.
 
 
-class EngineerViewSet(APIView):
+class EngineerCreateView(APIView):
     permission_classes = [IsAuthenticated, IsAdmin]
     def post(self, request):
         serializer = CreateEngineerSerializer(data=request.data)
@@ -38,7 +39,9 @@ class EngineerDetailView(APIView):
         engineer = get_object_or_404(EngineerProfile, pk=pk)
         serializer = EngineerProfileSerializer(engineer)
         return Response(serializer.data, status=status.HTTP_200_OK)
-class EngineerProfileViewSet(APIView):
+    
+    
+class EngineerProfileView(APIView):
     permission_classes = [IsAuthenticated, IsEngineer]
     def get(self, request):
         engineer_profile = get_object_or_404(EngineerProfile,  user=request.user)
@@ -47,8 +50,37 @@ class EngineerProfileViewSet(APIView):
     
     
 class EngineerProfileUpdateView(APIView):
-    pass 
+    permission_classes = [IsAuthenticated, IsEngineerOrAdmin]
+    def put(self, request, pk=None):
+        if request.user.role ==RegisterUserModel.Role.ENGINEER:
+            engineer_profile = get_object_or_404(EngineerProfile, user=request.user)
+        else:
+            engineer_profile = get_object_or_404(EngineerProfile, pk=pk)
+            
+        serializer = EngineerProfileSerializer(engineer_profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {
+                "message": "Engineer profile updated successfully",
+                "data": serializer.data,
+            },
+            status=status.HTTP_200_OK
+        )
 
 class EngineerProfileDeleteView(APIView):
-    pass
+    permission_classes = [IsAuthenticated, IsAdmin]
+    def delete(self, request, pk):
+        engineer_profile = get_object_or_404(EngineerProfile, pk=pk)
+        engineer_profile.user.delete()
+        return Response(
+            {
+                "message": "Engineer profile deleted successfully",
+                
+            },
+            status=status.HTTP_204_NO_CONTENT
+        )
+    
+
+
 

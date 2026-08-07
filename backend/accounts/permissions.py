@@ -14,3 +14,12 @@ class IsEngineer(BasePermission):
 class IsCustomer(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == RegisterUserModel.Role.CUSTOMER
+    
+class IsEngineerOrAdmin(BasePermission):
+
+    def has_permission(self, request, view):
+
+        return (
+            request.user.role == "engineer"
+            or request.user.role == "admin"
+        )
