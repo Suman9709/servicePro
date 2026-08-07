@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import RegisterUserModel
+from .models import RegisterUserModel, EngineerProfile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -31,9 +31,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         user = self.user
         data.update({
             "user":{
-                "id":"user.id",
+                "id": user.id,
                 "email":user.email,
                 "role":user.role,
             }
         })
         return data
+    
+class EngineerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EngineerProfile
+        fields = [
+            'id',
+            'user',
+            'professional_title',
+            'specialization',
+            'experience',
+            'is_available',
+            'created_at',
+            'updated_at'
+            
+        ]
