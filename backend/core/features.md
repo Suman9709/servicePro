@@ -1,10 +1,10 @@
 # Admin
-- login 
+- login ✅
 - logout
-- create engineers
+- create engineers ✅
 - update engineers
 - delete engineers
-- get all engineers
+- get all engineers✅
 
 
 - create service

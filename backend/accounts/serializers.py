@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import RegisterUserModel, EngineerProfile
+from .models import  RegisterUserModel
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -22,8 +22,14 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return user
-
-
+    def validate_role(self, value):
+        if value == "admin":
+            raise serializers.ValidationError(
+                "Admin account cannot be created."
+            )
+        return value
+        
+ 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
@@ -38,17 +44,16 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         })
         return data
     
-class EngineerProfileSerializer(serializers.ModelSerializer):
+class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = EngineerProfile
+        model = RegisterUserModel
         fields = [
             'id',
-            'user',
-            'professional_title',
-            'specialization',
-            'experience',
-            'is_available',
+            'username',
+            'email',
+            'phone_number',
+            'role',
+            'address',
             'created_at',
             'updated_at'
-            
         ]
