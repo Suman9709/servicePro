@@ -9,20 +9,21 @@
 
 - create service✅
 - search service ✅
+- getting all service✅
 
 - add equipment
 - remove equipment
 
 - view customer ✅
-- update customer
-- delete customer
-- seach customer
+- update customer✅
+- delete customer✅
+- seach customer✅
 
 
-- get all service request
-- cancel service request
-- assign engineer
-- edit assign
+- get all service request ✅
+- cancel service request✅
+- assign engineer✅
+- edit assign✅
 - change priority
 - monitor status
 

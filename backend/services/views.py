@@ -1,16 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from  accounts.permissions import IsAdmin
-from  services.serializers import CategorySerializer, ServiceSerializer, ServiceRequestSerializer
-from services.models import CategoryModel, ServiceModel
+from  services.serializers import CategorySerializer, ServiceSerializer, ServiceRequestSerializer, AdminServiceRequestSerializer
+from services.models import BookingModel, CategoryModel, ServiceModel
 
 # Create your views here.
 
@@ -35,5 +35,17 @@ class CreateServiceRequestView(CreateAPIView):
     serializer_class = ServiceRequestSerializer
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)
-    
+
+class ServiceRequestView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = BookingModel.objects.select_related('customer', 'engineer', 'service', 'service__category').all()
+    serializer_class = AdminServiceRequestSerializer
+   
+
+class DeleteServicerequest(DestroyAPIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+    queryset = BookingModel.objects.all()
+    lookup_field = 'id'
+    def get_queryset(self):
+        return BookingModel.objects.filter(customer=self.request.user)
     

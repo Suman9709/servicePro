@@ -80,3 +80,26 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
             })
 
         return attrs
+    
+class AdminServiceRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookingModel
+        fields = [
+            "id",
+            "customer",
+            "engineer",
+            "service",
+            "description",
+            "status",
+            "booking_date",
+            "created_at",
+        ]
+        read_only_fields = [
+            "id",
+            "customer",
+            "service",
+            "description",
+            "booking_date",
+            "created_at",
+        ]
+   

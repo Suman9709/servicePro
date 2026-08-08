@@ -78,3 +78,4 @@ class Logout(generics.GenericAPIView):
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
         return response
+
