@@ -13,7 +13,7 @@
 - add equipment
 - remove equipment
 
-- view customer
+- view customer ✅
 - update customer
 - delete customer
 - seach customer
@@ -39,7 +39,7 @@
 
 
 # Engineers
-- login
+- login ✅
 - logout
 - assign job
 - pending job
@@ -51,10 +51,10 @@
 
 
 # customer
-- register
-- login
+- register✅
+- login✅
 - logout
-- profile
+- profile✅
 - view equipments
 - raise service request
 - track request

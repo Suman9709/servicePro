@@ -9,6 +9,8 @@ from accounts.permissions import IsAdmin, IsEngineer,IsEngineerOrAdmin
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from accounts.models import RegisterUserModel
+from accounts.serializers import RegisterUserSerializer
 # Create your views here.
 
 
@@ -81,6 +83,18 @@ class EngineerProfileDeleteView(APIView):
             status=status.HTTP_204_NO_CONTENT
         )
     
+# customer
+
+# admin can get all the customers and their details
+
+class CustomerListView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+    def get(self, request):
+        customers = RegisterUserModel.objects.filter(role = RegisterUserModel.Role.CUSTOMER)
+        serializer = RegisterUserSerializer(customers, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+
 
 
 

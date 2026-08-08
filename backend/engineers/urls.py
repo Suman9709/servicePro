@@ -1,7 +1,7 @@
 
 from django.urls import path
 
-from engineers.views import EngineerCreateView, EngineerDetailView, EngineerListView, EngineerProfileDeleteView, EngineerProfileUpdateView, EngineerProfileView
+from engineers.views import CustomerListView, EngineerCreateView, EngineerDetailView, EngineerListView, EngineerProfileDeleteView, EngineerProfileUpdateView, EngineerProfileView
 
 
 urlpatterns = [
@@ -11,5 +11,6 @@ urlpatterns = [
     path('profile/', EngineerProfileView.as_view(), name='engineer_profile'),
     path('profile/update/<int:pk>/', EngineerProfileUpdateView.as_view(), name='engineer_profile_update'),
     path('profile/delete/<int:pk>/', EngineerProfileDeleteView.as_view(), name='engineer_profile_delete'),
+    path('all/customer/', CustomerListView.as_view(), name='list_customers'),
     
 ]

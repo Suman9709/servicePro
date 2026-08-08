@@ -29,6 +29,9 @@ class ServiceModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return self.name
+    
 
 
 class BookingModel(models.Model):
@@ -44,7 +47,10 @@ class BookingModel(models.Model):
     service = models.ForeignKey(ServiceModel, on_delete= models.PROTECT, related_name='service_booking')
     description = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=BookingStatus.choices, default=BookingStatus.PENDING)
-    booking_date = models.DateTimeField()
+    booking_date = models.DateTimeField(auto_now_add=True)
      
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Booking {self.id} - {self.service.name} for {self.customer.username}"
     
