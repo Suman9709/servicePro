@@ -2,6 +2,8 @@ from django.shortcuts import  get_object_or_404
 
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import RegisterUserModel
+from services.models import BookingModel
+from services.serializers import ServiceHistorySerializer
 from engineers.models import EngineerProfile
 from engineers.serializers import CreateEngineerSerializer, EngineerProfileSerializer
 
@@ -10,7 +12,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from accounts.models import RegisterUserModel
-from accounts.serializers import RegisterUserSerializer
 # Create your views here.
 
 
@@ -87,14 +88,10 @@ class EngineerProfileDeleteView(APIView):
 
 # admin can get all the customers and their details
 
-class CustomerListView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+class CustomerServiceHistoryView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
-        customers = RegisterUserModel.objects.filter(role = RegisterUserModel.Role.CUSTOMER)
-        serializer = RegisterUserSerializer(customers, many=True)
-        return Response(serializer.data, status = status.HTTP_200_OK)
-
-
-
-
+        bookings = BookingModel.objects.filter(customer = request.user).select_related('service', 'service__category', 'engineer').order_by('-booking_date')
+        serializer = ServiceHistorySerializer(bookings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 

@@ -1,5 +1,6 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+from engineers.views import CustomerServiceHistoryView
 from services.views import CategoryView, DeleteServicerequest, ServiceRequestView, ServiceView, CreateServiceRequestView
 
 router = DefaultRouter()
@@ -12,4 +13,5 @@ router.register(r'service-requests', ServiceRequestView, basename='allbooking')
 urlpatterns =[
     path('bookings/', CreateServiceRequestView.as_view(), name='create-service-request'),
     path('bookings/<int:id>/delete/', DeleteServicerequest.as_view(), name='delete-service-request'),
+    path('service-requests/', CustomerServiceHistoryView.as_view(), name='customer-service-history'),
 ]+ router.urls

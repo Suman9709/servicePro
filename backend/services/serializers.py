@@ -103,3 +103,22 @@ class AdminServiceRequestSerializer(serializers.ModelSerializer):
             "created_at",
         ]
    
+class ServiceHistorySerializer(serializers.ModelSerializer):
+    service_name = serializers.ReadOnlyField(source='service.name')
+    category_name = serializers.ReadOnlyField(source='service.category.name')
+    engineer_name = serializers.ReadOnlyField(source='engineer.user.username')
+
+    class Meta:
+        model = BookingModel
+        fields = [
+            "id",
+            "customer",
+            "service",
+            "service_name",
+            "category_name",
+            "engineer_name",
+            "description",
+            "status",
+            "booking_date",
+            "created_at",
+        ]

@@ -49,3 +49,9 @@ class DeleteServicerequest(DestroyAPIView):
     def get_queryset(self):
         return BookingModel.objects.filter(customer=self.request.user)
     
+class ServiceRequestListView(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ServiceRequestSerializer
+
+    def get_queryset(self):
+        return BookingModel.objects.filter(customer=self.request.user).select_related('service', 'service__category')

@@ -31,24 +31,24 @@
 
 # Dashboard 
 - total engineers
-- total customers
+- total customers✅
 - total equipments
 - active amc
-- pending request
-- completed request
+- pending request✅
+- completed request✅
 
 
 
 # Engineers
 - login ✅
 - logout
-- assign job
-- pending job
-- completed job
-- update service status
-- accept job
+- assign job✅
+- pending job✅
+- completed job✅
+- update service status ✅
+- accept job✅
 - add serice report 
-- view customer details
+- view customer details ✅
 
 
 # customer
@@ -57,6 +57,6 @@
 - logout
 - profile✅
 - view equipments
-- raise service request
-- track request
-- service history
+- raise service request✅
+- track request✅
+- service history✅
