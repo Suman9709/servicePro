@@ -6,7 +6,7 @@ export const MainLayout = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
-            <main className="flex-1">
+            <main className="flex-1 bg-white min-h-full flex flex-col justify-center items-center">
                 <Outlet />
             </main>
             <Footer />

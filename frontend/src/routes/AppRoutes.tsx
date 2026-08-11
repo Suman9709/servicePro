@@ -3,6 +3,7 @@ import { MainLayout } from '../layout/MainLayout'
 import Hero from '../Pages/Hero'
 import Login from '../components/Login'
 import Register from '../components/Register'
+import Profile from '../Pages/Profile'
 
 
 export const AppRoutes = () => {
@@ -13,6 +14,7 @@ export const AppRoutes = () => {
                 <Route index element={<Hero />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
+                <Route path="profile" element={<Profile />} />
             </Route>
         </Routes>
     )
