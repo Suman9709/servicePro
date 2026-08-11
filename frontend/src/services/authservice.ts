@@ -55,3 +55,7 @@ export const updateProfile = async(data: Partial<User>): Promise<User> => {
     const response = await authaxios.patch('profile/', data);
     return response.data;
 }
+
+export const logout = async (): Promise<void> => {
+    await authaxios.post('logout/');
+}

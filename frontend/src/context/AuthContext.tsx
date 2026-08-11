@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {
-    register, login, profile, updateProfile,
+    register, login, profile, updateProfile, logout,
     type RegisterData,
     type LoginData,
     type User
@@ -17,7 +17,7 @@ interface AuthContextType {
     loginUser: (loginData: LoginData) => Promise<User>;
     getProfile: () => Promise<User>;
     editProfile: (userData: Partial<User>) => Promise<User>;
-    logout: () => void;
+    logoutUser: () => void;
 
 
 }
@@ -32,7 +32,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const [user, setUser] = useState<User | null>(null);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
     const navigate = useNavigate();
 
     const registerUser = async (userData: RegisterData) => {
@@ -42,38 +42,45 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     const loginUser = async (loginData: LoginData): Promise<User> => {
-       await login(loginData);
-       const userProfile = await profile();
+        await login(loginData);
+        const userProfile = await profile();
         setUser(userProfile);
-        setIsAuthenticated(true);
         navigate("/profile");
         console.log("Logged in user:", userProfile);
         return userProfile;
     }
-     
+
     const getProfile = async (): Promise<User> => {
         const userProfile = await profile();
         setUser(userProfile);
         return userProfile;
     }
 
-    useEffect(()=>{
-        const fetchProfile = async ()=>{
-            try{
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
                 const userProfile = await profile();
                 setUser(userProfile);
             }
-            catch(error){
+            catch (error) {
                 console.error("Error fetching profile:", error);
             }
         }
         fetchProfile();
-    },[])
+    }, [])
 
-    const logout = async () => {
-        setUser(null);
-        setIsAuthenticated(false);
-        navigate("/login");
+    const logoutUser = async () => {
+        try {
+            await logout();
+
+        }
+        catch (error) {
+            console.error("Error logging out:", error);
+        }
+        finally {
+            setUser(null);
+            navigate("/login", { replace: true });
+        }
     }
 
     const editProfile = async (userData: Partial<User>): Promise<User> => {
@@ -90,7 +97,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             loginUser,
             getProfile,
             editProfile,
-            logout
+            logoutUser
         }}>
             {children}
         </AuthContext.Provider>

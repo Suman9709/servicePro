@@ -1,5 +1,12 @@
+import { Link } from "react-router-dom"
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
+    const { logoutUser, user } = useAuth();
+
+    const handleLogout =  async() => {
+       await logoutUser();
+    }
     return (
         <>
             <div className="navbar bg-base-100 shadow-sm">
@@ -12,20 +19,20 @@ const Navbar = () => {
                     </ul>
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                            <div className="w-10 rounded-full">
-                                <img
-                                    alt="Tailwind CSS Navbar component"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                            <div className="w-10 rounded-full flex items-center justify-center border text-white font-bold">
+                                {user?.username?.at(0)?.toUpperCase() || "U"}
                             </div>
                         </div>
                         <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                             <li>
-                                <a className="justify-between">
+                                <Link to="/profile" className="justify-between">
                                     Profile
-                                    
-                                </a>
+
+                                </Link>
                             </li>
-                            <li><a>Logout</a></li>
+                            <li><button type="button" onClick={handleLogout}>
+                                Logout
+                            </button></li>
                         </ul>
                     </div>
                 </div>

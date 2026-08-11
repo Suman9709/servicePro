@@ -132,12 +132,8 @@ const Profile = () => {
                     <p className="text-sm text-gray-500 mt-1">
                       @{user?.username || "username"}
                     </p>
-
                   </div>
-
                 </div>
-
-
                 {/* Account Status */}
 
                 <div className="flex items-center gap-3">
@@ -150,7 +146,7 @@ const Profile = () => {
                     </p>
 
                     <p className="text-xs text-gray-500">
-                      ServicePro customer
+                      ServicePro {user?.role || "Customer"} Account
                     </p>
                   </div>
 
