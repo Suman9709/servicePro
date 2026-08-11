@@ -9,11 +9,14 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         model = RegisterUserModel
         fields = [
             'id', 
+            'first_name',
+            'last_name',
             'username',
             'email', 
             'phone_number', 
             'role', 
             'password',
+            'address',
             'created_at',
             'updated_at'
             ]

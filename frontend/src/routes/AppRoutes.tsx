@@ -4,6 +4,7 @@ import Hero from '../Pages/Hero'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Profile from '../Pages/Profile'
+import EditProfile from '../Pages/EditProfile'
 
 
 export const AppRoutes = () => {
@@ -15,6 +16,7 @@ export const AppRoutes = () => {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="profile" element={<Profile />} />
+                <Route path="edit-profile" element={<EditProfile />} />
             </Route>
         </Routes>
     )

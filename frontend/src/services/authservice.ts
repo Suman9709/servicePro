@@ -31,6 +31,7 @@ export interface User {
     phone_number: string,
     first_name?: string,
     last_name?: string,
+    address?: string,
     role: "admin" | "customer" | "engineer";
 }
 
@@ -47,5 +48,10 @@ export const login = async (data: LoginData): Promise<User> => {
 
 export const profile = async (): Promise<User> => {
     const response = await authaxios.get('profile/');
+    return response.data;
+}
+
+export const updateProfile = async(data: Partial<User>): Promise<User> => {
+    const response = await authaxios.patch('profile/', data);
     return response.data;
 }

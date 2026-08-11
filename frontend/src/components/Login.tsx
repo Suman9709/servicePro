@@ -8,6 +8,7 @@ const Login = () => {
   // Use the useAuth hook to get the login function
 
   const { loginUser } = useAuth();
+ // Log the loginUser function to check if it's defined
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
