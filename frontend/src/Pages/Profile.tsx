@@ -1,17 +1,14 @@
 
 import {
-  CalendarCheckIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  MapPinIcon,
   PencilSimpleIcon,
-  PhoneIcon,
-  UserCircleIcon,
   WrenchIcon,
+
 } from "@phosphor-icons/react";
 
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+
+
 
 const Profile = () => {
   const { user } = useAuth();
@@ -19,13 +16,13 @@ const Profile = () => {
   console.log("User data:", user);
 
   return (
-    <div className="min-h-screen w-full bg-[#f5f7fb] text-gray-900">
+    <div className="min-h-full w-full  text-gray-900 rounded-lg">
 
       {/* ================================================= */}
       {/* PAGE HEADER */}
       {/* ================================================= */}
 
-      <div className="w-full bg-white border-b border-gray-200">
+      <div className="w-full  border shadow-sm rounded-2xl border-gray-200">
 
         <div className="w-full px-6 md:px-8 lg:px-10 py-6">
 
@@ -44,22 +41,11 @@ const Profile = () => {
                 Manage your account and view your service activity.
               </p>
             </div>
-
-
-            <Link
-              to="/edit-profile"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition shadow-sm"
-            >
-              <PencilSimpleIcon size={18} />
-              Edit Profile
-            </Link>
-
           </div>
 
         </div>
 
       </div>
-
 
       {/* ================================================= */}
       {/* MAIN CONTENT */}
@@ -68,136 +54,6 @@ const Profile = () => {
       <main className="w-full px-6 md:px-8 lg:px-10 py-6">
 
         <div className="w-full space-y-6">
-
-
-          {/* ================================================= */}
-          {/* PROFILE HERO */}
-          {/* ================================================= */}
-
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-
-            {/* Blue Banner */}
-
-            <div className="h-28 md:h-32 bg-[#093760] relative">
-
-              <div className="absolute inset-0 bg-gradient-to-r from-[#093760] to-[#0c4a7d]" />
-
-            </div>
-
-
-            {/* Profile Content */}
-
-            <div className="px-6 md:px-8 pb-7">
-
-              <div className="relative -mt-12 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
-
-                {/* User */}
-
-                <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-
-                  {/* Avatar */}
-
-                  <div className="w-24 h-24 rounded-2xl bg-white p-1 shadow-md">
-
-                    <div className="w-full h-full rounded-xl bg-blue-50 flex items-center justify-center">
-
-                      <UserCircleIcon
-                        size={68}
-                        weight="fill"
-                        className="text-blue-600"
-                      />
-
-                    </div>
-
-                  </div>
-
-
-                  {/* User Information */}
-
-                  <div className="pb-1">
-
-                    <div className="flex flex-wrap items-center gap-3">
-
-                      <h2 className="text-2xl font-bold text-gray-900">
-                        {user?.first_name || user?.username || "User"}
-                        {user?.last_name && ` ${user.last_name}`}
-                      </h2>
-
-                      <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-semibold capitalize">
-                        {user?.role || "Customer"}
-                      </span>
-
-                    </div>
-
-                    <p className="text-sm text-gray-500 mt-1">
-                      @{user?.username || "username"}
-                    </p>
-                  </div>
-                </div>
-                {/* Account Status */}
-
-                <div className="flex items-center gap-3">
-
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">
-                      Account Active
-                    </p>
-
-                    <p className="text-xs text-gray-500">
-                      ServicePro {user?.role || "Customer"} Account
-                    </p>
-                  </div>
-
-                </div>
-
-              </div>
-
-
-              {/* Email */}
-
-              <div className="mt-6 pt-5 border-t border-gray-100 flex flex-wrap gap-x-8 gap-y-3">
-
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-
-                  <span className="text-blue-600">
-                    ✉
-                  </span>
-
-                  {user?.email || "Email not provided"}
-
-                </div>
-
-
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-
-                  <PhoneIcon
-                    size={17}
-                    className="text-blue-600"
-                  />
-
-                  {user?.phone_number || "Phone not provided"}
-
-                </div>
-
-
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-
-                  <MapPinIcon
-                    size={17}
-                    className="text-blue-600"
-                  />
-
-                  {user?.address || "Address not provided"}
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
 
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -410,7 +266,7 @@ const Profile = () => {
           {/* RECENT SERVICE REQUESTS */}
           {/* ================================================= */}
 
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          <div id="services" className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
 
             {/* Header */}
 
@@ -423,12 +279,6 @@ const Profile = () => {
                   Your latest maintenance and service activities
                 </p>
               </div>
-              <button
-                type="button"
-                className="text-sm font-semibold text-blue-600 hover:text-blue-700"
-              >
-                View All
-              </button>
             </div>
             {/* Table */}
 

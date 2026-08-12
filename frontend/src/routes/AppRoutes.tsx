@@ -5,6 +5,7 @@ import Login from '../components/Login'
 import Register from '../components/Register'
 import Profile from '../Pages/Profile'
 import EditProfile from '../Pages/EditProfile'
+import ProfileLayout from '../layout/ProfileLayout,+'
 
 
 export const AppRoutes = () => {
@@ -15,8 +16,13 @@ export const AppRoutes = () => {
                 <Route index element={<Hero />} />
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="edit-profile" element={<EditProfile />} />
+
+            </Route>
+
+            {/* profile routes */}
+            <Route path="profile" element={<ProfileLayout />}>
+                <Route index element={<Profile />} />
+                <Route path="edit" element={<EditProfile />} />
             </Route>
         </Routes>
     )
