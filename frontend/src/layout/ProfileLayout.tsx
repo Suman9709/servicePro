@@ -1,14 +1,22 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar"
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
+import { useLogout, useProfile } from "../hooks/useAuth";
 
 
 const ProfileLayout = () => {
-    const { user } = useAuth();
-    const {logoutUser} = useAuth();
+    const { data: user } = useProfile()
+    const logoutMutation = useLogout();
 
-    const handleLogout =  async() => {
-       await logoutUser();
+    const handleLogout = async () => {
+        try {
+            await logoutMutation.mutateAsync();
+            console.log("Logout Successful");
+
+        }
+        catch (error) {
+            console.error("Logout failed:", error);
+        }
     }
 
     return (
@@ -23,6 +31,6 @@ const ProfileLayout = () => {
             />
         </>
     )
-   
+
 }
 export default ProfileLayout

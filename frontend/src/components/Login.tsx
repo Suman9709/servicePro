@@ -2,20 +2,25 @@
 import { WrenchIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
+import { useLogin } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  // Use the useAuth hook to get the login function
 
-  const { loginUser } = useAuth();
- // Log the loginUser function to check if it's defined
+  // const { loginUser } = useAuth();
+
+  const loginMutation = useLogin()
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      await loginUser({ username, password });
+    await loginMutation.mutateAsync({ username, password });
+    navigate("/profile"); 
     }
     catch (error) {
       console.error("Login failed:", error);
@@ -140,11 +145,12 @@ const Login = () => {
 
             {/* Login Button */}
             <button
+            disabled={loginMutation.isPending}
               onClick={handleLogin}
               type="button"
               className="w-full h-12 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition shadow-sm"
             >
-              Login
+              {loginMutation.isPending ? "Logging in..." : "Login"}
             </button>
 
             {/* Signup */}

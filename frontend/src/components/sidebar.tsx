@@ -59,7 +59,7 @@ const Sidebar = ({
                             {/* Mobile menu */}
                             <label
                                 htmlFor="my-drawer-4"
-                                className="btn btn-square btn-ghost lg:hidden"
+                                className="btn btn-square text-2xl btn-ghost lg:hidden"
                             >
                                 ☰
                             </label>
@@ -153,7 +153,7 @@ const Sidebar = ({
 
                             {/* Edit profile button */}
                             <Link
-                                to="/profile/edit"
+                                to="/profile/edit-profile"
                                 className="btn btn-primary btn-sm mt-4 w-full gap-2 hover:scale-[1.02] transition-transform duration-200"
                             >
                                 Edit Profile

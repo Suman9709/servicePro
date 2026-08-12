@@ -56,18 +56,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return userProfile;
     }
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const userProfile = await profile();
-                setUser(userProfile);
-            }
-            catch (error) {
-                console.error("Error fetching profile:", error);
-            }
-        }
-        fetchProfile();
-    }, [])
+    // useEffect(() => {
+    //     const fetchProfile = async () => {
+    //         try {
+    //             const userProfile = await profile();
+    //             setUser(userProfile);
+    //         }
+    //         catch (error) {
+    //             console.error("Error fetching profile:", error);
+    //         }
+    //     }
+    //     fetchProfile();
+    // }, [])
 
     const logoutUser = async () => {
         try {

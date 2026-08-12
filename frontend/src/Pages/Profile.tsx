@@ -5,15 +5,22 @@ import {
 
 } from "@phosphor-icons/react";
 
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
-
-
+import { useProfile } from "../hooks/useAuth";
 
 const Profile = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
-  console.log("User data:", user);
+  const { data: user, isLoading, isError } = useProfile()
+  if (isLoading) {
+    return <div>Loading profile...</div>;
+  }
+
+  if (isError) {
+    return <div>Please login.</div>;
+  }
+
 
   return (
     <div className="min-h-full w-full  text-gray-900 rounded-lg">
@@ -33,8 +40,8 @@ const Profile = () => {
                 Account
               </p>
 
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                My Profile
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 ">
+                <span className="capitalize">{user?.role}</span> Profile
               </h1>
 
               <p className="text-sm text-gray-500 mt-1">
@@ -51,7 +58,7 @@ const Profile = () => {
       {/* MAIN CONTENT */}
       {/* ================================================= */}
 
-      <main className="w-full px-6 md:px-8 lg:px-10 py-6">
+      <main className="w-full px-2 md:px-8 lg:px-10 py-6">
 
         <div className="w-full space-y-6">
 
@@ -63,7 +70,7 @@ const Profile = () => {
 
             <div className="xl:col-span-2 bg-white border border-gray-200 rounded-2xl shadow-sm">
 
-              <div className="px-6 md:px-7 py-5 border-b border-gray-200">
+              <div className="px-6 md:px-4 py-5 border-b border-gray-200">
 
                 <h2 className="text-lg font-bold text-gray-900">
                   Personal Information
@@ -90,7 +97,7 @@ const Profile = () => {
                     </p>
 
                     <p className="mt-2 font-medium text-gray-800">
-                      {user?.first_name || "Not provided"}
+                      {user?.first_name}
                     </p>
 
                   </div>
@@ -105,7 +112,7 @@ const Profile = () => {
                     </p>
 
                     <p className="mt-2 font-medium text-gray-800">
-                      {user?.last_name || "Not provided"}
+                      {user?.last_name}
                     </p>
 
                   </div>
@@ -120,7 +127,7 @@ const Profile = () => {
                     </p>
 
                     <p className="mt-2 font-medium text-gray-800">
-                      {user?.username || "Not provided"}
+                      {user?.username}
                     </p>
 
                   </div>
@@ -135,7 +142,7 @@ const Profile = () => {
                     </p>
 
                     <p className="mt-2 font-medium text-gray-800 break-all">
-                      {user?.email || "Not provided"}
+                      {user?.email}
                     </p>
 
                   </div>
@@ -236,29 +243,19 @@ const Profile = () => {
                   <p className="text-sm font-medium text-gray-800 mt-2">
                     August 2026
                   </p>
-
                 </div>
-
-
                 <div className="pt-4 border-t border-gray-100">
 
                   <Link
-                    to="/edit-profile"
+                    to="/profile/edit-profile"
                     className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
                   >
-
                     <PencilSimpleIcon size={17} />
-
                     Edit Account
-
                   </Link>
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
 
 
@@ -266,176 +263,178 @@ const Profile = () => {
           {/* RECENT SERVICE REQUESTS */}
           {/* ================================================= */}
 
-          <div id="services" className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+          {user?.role === "customer" && (
+            <div id="services" className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
 
-            {/* Header */}
+              {/* Header */}
 
-            <div className="px-6 md:px-7 py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div>
-                <h2 className="text-lg font-bold text-gray-900">
-                  Recent Service Requests
-                </h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  Your latest maintenance and service activities
+              <div className="px-6 md:px-7 py-5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">
+                    Recent Service Requests
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Your latest maintenance and service activities
+                  </p>
+                </div>
+              </div>
+              {/* Table */}
+
+              <div className="overflow-x-auto">
+
+                <table className="w-full text-sm">
+
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="text-left px-6 md:px-7 py-4 font-semibold text-gray-500">
+                        Service
+                      </th>
+                      <th className="text-left px-6 py-4 font-semibold text-gray-500">
+                        Date
+                      </th>
+                      <th className="text-left px-6 py-4 font-semibold text-gray-500">
+                        Status
+                      </th>
+                      <th className="text-right px-6 md:px-7 py-4 font-semibold text-gray-500">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {/* Row 1 */}
+                    <tr className="hover:bg-gray-50 transition">
+                      <td className="px-6 md:px-7 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
+                            <WrenchIcon
+                              size={18}
+                              className="text-blue-600"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-800">
+                              Equipment Maintenance
+                            </p>
+
+                            <p className="text-xs text-gray-400">
+                              Service #SR-001
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">
+                        Jan 01, 2026
+                      </td>
+                      <td className="px-6 py-4">
+
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-semibold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                          Completed
+                        </span>
+                      </td>
+                      <td className="px-6 md:px-7 py-4 text-right">
+                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                    {/* Row 2 */}
+                    <tr className="hover:bg-gray-50 transition">
+                      <td className="px-6 md:px-7 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-lg bg-yellow-50 flex items-center justify-center">
+                            <WrenchIcon
+                              size={18}
+                              className="text-yellow-600"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-800">
+                              AC Repair
+                            </p>
+
+                            <p className="text-xs text-gray-400">
+                              Service #SR-002
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">
+                        Feb 14, 2026
+                      </td>
+                      <td className="px-6 py-4">
+
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-50 text-yellow-600 text-xs font-semibold">
+
+                          <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
+
+                          In Progress
+
+                        </span>
+
+                      </td>
+                      <td className="px-6 md:px-7 py-4 text-right">
+                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                          View
+                        </button>
+                      </td>
+                    </tr>
+
+
+                    {/* Row 3 */}
+
+                    <tr className="hover:bg-gray-50 transition">
+                      <td className="px-6 md:px-7 py-4">
+                        <div className="flex items-center gap-3">
+
+                          <div className="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center">
+                            <WrenchIcon
+                              size={18}
+                              className="text-purple-600"
+                            />
+                          </div>
+
+                          <div>
+                            <p className="font-semibold text-gray-800">
+                              Generator Service
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              Service #SR-003
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">
+                        Mar 20, 2026
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-semibold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                          Scheduled
+                        </span>
+                      </td>
+                      <td className="px-6 md:px-7 py-4 text-right">
+                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              {/* Footer */}
+
+              <div className="px-6 md:px-7 py-4 border-t border-gray-100 flex items-center justify-between">
+                <p className="text-sm text-gray-500">
+                  Showing 3 recent service requests
                 </p>
+                <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+                  View All Services
+                </button>
               </div>
             </div>
-            {/* Table */}
-
-            <div className="overflow-x-auto">
-
-              <table className="w-full text-sm">
-
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="text-left px-6 md:px-7 py-4 font-semibold text-gray-500">
-                      Service
-                    </th>
-                    <th className="text-left px-6 py-4 font-semibold text-gray-500">
-                      Date
-                    </th>
-                    <th className="text-left px-6 py-4 font-semibold text-gray-500">
-                      Status
-                    </th>
-                    <th className="text-right px-6 md:px-7 py-4 font-semibold text-gray-500">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {/* Row 1 */}
-                  <tr className="hover:bg-gray-50 transition">
-                    <td className="px-6 md:px-7 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
-                          <WrenchIcon
-                            size={18}
-                            className="text-blue-600"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            Equipment Maintenance
-                          </p>
-
-                          <p className="text-xs text-gray-400">
-                            Service #SR-001
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">
-                      Jan 01, 2026
-                    </td>
-                    <td className="px-6 py-4">
-
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                        Completed
-                      </span>
-                    </td>
-                    <td className="px-6 md:px-7 py-4 text-right">
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                  {/* Row 2 */}
-                  <tr className="hover:bg-gray-50 transition">
-                    <td className="px-6 md:px-7 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-yellow-50 flex items-center justify-center">
-                          <WrenchIcon
-                            size={18}
-                            className="text-yellow-600"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            AC Repair
-                          </p>
-
-                          <p className="text-xs text-gray-400">
-                            Service #SR-002
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">
-                      Feb 14, 2026
-                    </td>
-                    <td className="px-6 py-4">
-
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-50 text-yellow-600 text-xs font-semibold">
-
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
-
-                        In Progress
-
-                      </span>
-
-                    </td>
-                    <td className="px-6 md:px-7 py-4 text-right">
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                        View
-                      </button>
-                    </td>
-                  </tr>
-
-
-                  {/* Row 3 */}
-
-                  <tr className="hover:bg-gray-50 transition">
-                    <td className="px-6 md:px-7 py-4">
-                      <div className="flex items-center gap-3">
-
-                        <div className="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center">
-                          <WrenchIcon
-                            size={18}
-                            className="text-purple-600"
-                          />
-                        </div>
-
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            Generator Service
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            Service #SR-003
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">
-                      Mar 20, 2026
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-semibold">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                        Scheduled
-                      </span>
-                    </td>
-                    <td className="px-6 md:px-7 py-4 text-right">
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {/* Footer */}
-
-            <div className="px-6 md:px-7 py-4 border-t border-gray-100 flex items-center justify-between">
-              <p className="text-sm text-gray-500">
-                Showing 3 recent service requests
-              </p>
-              <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
-                View All Services
-              </button>
-            </div>
-          </div>
+          )}
         </div>
 
       </main>

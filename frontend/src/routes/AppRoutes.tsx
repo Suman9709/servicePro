@@ -5,7 +5,7 @@ import Login from '../components/Login'
 import Register from '../components/Register'
 import Profile from '../Pages/Profile'
 import EditProfile from '../Pages/EditProfile'
-import ProfileLayout from '../layout/ProfileLayout,+'
+import ProfileLayout from '../layout/ProfileLayout'
 
 
 export const AppRoutes = () => {
@@ -22,8 +22,10 @@ export const AppRoutes = () => {
             {/* profile routes */}
             <Route path="profile" element={<ProfileLayout />}>
                 <Route index element={<Profile />} />
-                <Route path="edit" element={<EditProfile />} />
+                <Route path="edit-profile" element={<EditProfile />} />
             </Route>
+
+
         </Routes>
     )
 }
