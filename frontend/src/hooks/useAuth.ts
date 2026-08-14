@@ -30,6 +30,7 @@ export const useProfile = () => {
         queryKey: ["profile"],
         queryFn: () => profile(),
         retry: false,
+        staleTime: 5 * 60 * 1000,
     })
 }
 

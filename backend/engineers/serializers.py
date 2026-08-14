@@ -2,25 +2,35 @@ from rest_framework import serializers
 from accounts.models import RegisterUserModel
 from django.db import transaction
 from .models import EngineerProfile
-
+from rest_framework.validators import UniqueValidator
 
 class EngineerProfileSerializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(
         source="user.email",
-        read_only=True
+
     )
 
     username = serializers.CharField(
         source="user.username",
-        read_only=True
+
     )
 
     phone_number = serializers.CharField(
         source="user.phone_number",
-        read_only=True
-    )
 
+    )
+    professional_title = serializers.CharField(
+        source="professional_title",
+    ),
+    specialization = serializers.CharField(
+        source="specialization",
+        required=False,
+        allow_blank=True
+    ),
+    experience = serializers.CharField(
+        source="experience",
+    ),
     class Meta:
         model = EngineerProfile
 
@@ -38,7 +48,7 @@ class EngineerProfileSerializer(serializers.ModelSerializer):
         ]
 
 
-from rest_framework.validators import UniqueValidator
+
 
 class CreateEngineerSerializer(serializers.ModelSerializer):
 
@@ -101,4 +111,4 @@ class CreateEngineerSerializer(serializers.ModelSerializer):
         return engineer_profile
 
     def to_representation(self, instance):
-        return EngineerProfileSerializer(instance, context=self.context).data
+        return EngineerProfileSerializer(instance, context=self.context).data

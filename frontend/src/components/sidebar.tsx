@@ -1,7 +1,20 @@
-import { EnvelopeSimpleIcon, SignOutIcon } from "@phosphor-icons/react";
+// Sidebar.tsx
+import {
+    EnvelopeSimpleIcon,
+    SignOutIcon,
+    HouseIcon,
+    UsersIcon,
+    WrenchIcon,
+    ChartBarIcon,
+    ClipboardTextIcon,
+    UserCircleIcon,
+    FolderOpenIcon,
+    TicketIcon
+} from "@phosphor-icons/react";
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
+
 interface SidebarProps {
     maincontent: ReactNode;
     first_name?: string;
@@ -9,8 +22,33 @@ interface SidebarProps {
     username?: string;
     email?: string;
     profileImage?: string;
+    role?:string;
     onLogout?: () => void;
 }
+
+interface NavItem {
+    label: string;
+    path: string;
+    icon: ReactNode;
+    isHashLink?: boolean;
+    isExternal?: boolean;
+    badge?: number;
+}
+const CalendarIcon = ({ size }: any) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
+        <path d="M9 1v2h6V1h2v2h4a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1h4V1h2zm11 10H4v8h16v-8zM7 5H4v4h16V5h-3v2h-2V5H9v2H7V5z" />
+    </svg>
+);
+// Add missing icons (you need to import these from phosphor)
+
+
+const ClockIcon = ({ size }: any) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
+        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm1-8h4v2h-6V7h2v5z" />
+    </svg>
+);
+
+
 
 const Sidebar = ({
     maincontent,
@@ -19,61 +57,209 @@ const Sidebar = ({
     profileImage,
     first_name,
     last_name,
+    role = "customer",
     onLogout
 }: SidebarProps) => {
-    const userInitial =
-        username?.charAt(0).toUpperCase() || "U";
+    const location = useLocation();
+    const userInitial = username?.charAt(0).toUpperCase() || "U";
 
     const handleLogout = () => {
         if (onLogout) {
             onLogout();
         } else {
-            // Default logout behavior - you can customize this
             console.log("Logout clicked");
         }
     };
 
+    // Navigation configuration
+    const getNavItems = (): NavItem[] => {
+        // Common items for all roles
+        const commonItems: NavItem[] = [
+            {
+                label: "Profile",
+                path: "/profile",
+                icon: <UserCircleIcon size={20} weight="fill" />,
+            },
+        ];
+
+        // Role-specific items
+        const roleItems: Record<string, NavItem[]> = {
+            admin: [
+                {
+                    label: "Dashboard",
+                    path: "/admin/dashboard",
+                    icon: <HouseIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "Engineers",
+                    path: "/admin/manage-engineers",
+                    icon: <UsersIcon size={20} weight="fill" />,
+                    badge: 12,
+                },
+                {
+                    label: "Categories",
+                    path: "/admin/manage-categories",
+                    icon: <FolderOpenIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "Services",
+                    path: "/admin/manage-services",
+                    icon: <WrenchIcon size={20} weight="fill" />,
+
+                },
+                {
+                    label: "Service Requests",
+                    path: "/admin/manage-service-requests",
+                    icon: <TicketIcon size={20} weight="fill" />,
+
+                },
+                {
+                    label: "Feedbacks",
+                    path: "/admin/feedbacks",
+                    icon: <ClipboardTextIcon size={20} weight="fill" />,
+                },
+
+            ],
+            engineer: [
+                {
+                    label: "Dashboard",
+                    path: "/engineer/dashboard",
+                    icon: <HouseIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "My Tasks",
+                    path: "/engineer/tasks",
+                    icon: <ClipboardTextIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "Assigned Jobs",
+                    path: "/engineer/jobs",
+                    icon: <TicketIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "My Services",
+                    path: "/engineer/services",
+                    icon: <WrenchIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "Schedule",
+                    path: "/engineer/schedule",
+                    icon: <CalendarIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "Performance",
+                    path: "/engineer/performance",
+                    icon: <ChartBarIcon size={20} weight="fill" />,
+                },
+            ],
+            customer: [
+                {
+                    label: "Dashboard",
+                    path: "/customer/dashboard",
+                    icon: <HouseIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "My Bookings",
+                    path: "/customer/bookings",
+                    icon: <TicketIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "Request Service",
+                    path: "/customer/request",
+                    icon: <WrenchIcon size={20} weight="fill" />,
+                },
+                {
+                    label: "Services",
+                    path: "/profile#services",
+                    icon: <FolderOpenIcon size={20} weight="fill" />,
+                    isHashLink: true,
+                },
+                {
+                    label: "My History",
+                    path: "/customer/history",
+                    icon: <ClockIcon size={20} weight="fill" />,
+                },
+            ],
+        };
+
+        return [...commonItems, ...(roleItems[role] || roleItems.customer)];
+    };
+
+    const navItems = getNavItems();
+
+    // Check if a path is active
+    const isActive = (path: string) => {
+        if (path.includes('#')) {
+            return location.pathname === path.split('#')[0];
+        }
+        return location.pathname === path || location.pathname.startsWith(path + '/');
+    };
+
+    // Render navigation link
+    const renderNavLink = (item: NavItem) => {
+        const active = isActive(item.path);
+        const baseClasses = `flex items-center justify-between px-4 py-2.5 rounded-lg transition-all duration-200 ${active
+                ? 'bg-primary/10 text-primary font-medium'
+                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+            }`;
+
+        const content = (
+            <>
+                <div className="flex items-center gap-3">
+                    <span className={active ? 'text-primary' : 'text-gray-500'}>
+                        {item.icon}
+                    </span>
+                    <span className="text-sm">{item.label}</span>
+                </div>
+             
+            </>
+        );
+
+        if (item.isHashLink) {
+            return (
+                <HashLink to={item.path} smooth className={baseClasses}>
+                    {content}
+                </HashLink>
+            );
+        }
+
+        return (
+            <Link to={item.path} className={baseClasses}>
+                {content}
+            </Link>
+        );
+    };
+
     return (
         <div className="drawer lg:drawer-open">
-            {/* Drawer checkbox */}
             <input
                 id="my-drawer-4"
                 type="checkbox"
                 className="drawer-toggle"
             />
 
-            {/* Main content wrapper */}
             <div className="drawer-content flex min-h-screen flex-col">
-                {/* Top bar - fixed full width */}
-                <div className="fixed top-0 left-0 right-0 z-10 h-16 bg-base-100 shadow-sm ">
+                <div className="fixed top-0 left-0 right-0 z-10 h-16 bg-white shadow-sm border-b border-gray-100">
                     <div className="flex h-full items-center justify-between px-4">
-                        {/* Company name */}
                         <div className="flex items-center gap-2">
-                            <span className="text-xl font-bold">
-                                ServicePro
-                            </span>
+                            <span className="text-xl font-bold text-primary">ServicePro</span>
+                            <span className="badge badge-primary badge-sm capitalize">{role}</span>
                         </div>
 
-                        {/* Mobile sidebar button + user avatar */}
                         <div className="flex items-center gap-3">
-                            {/* Mobile menu */}
                             <label
                                 htmlFor="my-drawer-4"
-                                className="btn btn-square text-2xl btn-ghost lg:hidden"
+                                className="btn btn-square text-2xl btn-ghost lg:hidden text-black font-bold"
                             >
                                 ☰
                             </label>
 
-                            {/* Logged in user avatar */}
                             <div className="avatar">
-                                <div className="w-10 rounded-full border">
+                                <div className="w-10 rounded-full border-2 border-primary/30">
                                     {profileImage ? (
-                                        <img
-                                            src={profileImage}
-                                            alt={username || "User"}
-                                        />
+                                        <img src={profileImage} alt={username || "User"} />
                                     ) : (
-                                        <div className="flex h-full w-full items-center justify-center bg-primary font-bold text-primary-content">
+                                        <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-primary to-primary/70 font-bold text-white">
                                             {userInitial}
                                         </div>
                                     )}
@@ -83,15 +269,13 @@ const Sidebar = ({
                     </div>
                 </div>
 
-                {/* Main content with padding for fixed header and sidebar */}
                 <main className="flex-1 overflow-x-auto pt-16 lg:ml-64">
-                    <div className="p-6 bg-white">
+                    <div className="min-h-screen bg-gray-50">
                         {maincontent}
                     </div>
                 </main>
             </div>
 
-            {/* Sidebar */}
             <div className="drawer-side scrollbar-none">
                 <label
                     htmlFor="my-drawer-4"
@@ -99,118 +283,72 @@ const Sidebar = ({
                     className="drawer-overlay"
                 />
 
-                {/* Sidebar - fixed below top bar */}
-                <div className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-base-100 shadow-lg flex flex-col overflow-hidden">
-                    {/* Scrollable content area */}
-                    <div className="flex-1 overflow-y-auto">
-                        {/* User information */}
-                        <div className="w-[95%] mx-auto p-5 shrink-0 bg-linear-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg shadow-black/10 mt-6">
-                            {/* User avatar and name */}
-                            <div className="flex items-center gap-4">
-                                {/* User avatar with ring */}
+                <div className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-white shadow-lg flex flex-col overflow-hidden scrollbar-none border-r border-gray-100">
+                    <div className="flex-1 overflow-y-auto p-4 cscrollbar-none">
+                        {/* User Profile Card */}
+                        <div className="bg-linear-to-br from-primary/5 to-primary/10 rounded-xl p-4 mb-6 border border-primary/10">
+                            <div className="flex items-center gap-3">
                                 <div className="avatar">
-                                    <div className="w-14 rounded-full ring-2 ring-primary/50 ring-offset-2 ring-offset-base-100">
+                                    <div className="w-12 rounded-full ring-2 ring-primary/30 ring-offset-2 ring-offset-white">
                                         {profileImage ? (
-                                            <img
-                                                src={profileImage}
-                                                alt={username || "User"}
-                                                className="object-cover"
-                                            />
+                                            <img src={profileImage} alt={username || "User"} className="object-cover" />
                                         ) : (
-                                            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-primary to-primary-focus font-bold text-primary-content text-xl">
+                                            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-primary to-primary/70 font-bold text-white text-lg">
                                                 {userInitial}
                                             </div>
                                         )}
                                     </div>
                                 </div>
 
-                                {/* User details */}
                                 <div className="min-w-0 flex-1">
-                                    <h1 className="text-xl font-bold text-white truncate">
+                                    <h1 className="text-sm font-bold text-gray-900 truncate">
                                         {first_name} {last_name}
                                     </h1>
                                     <div className="flex items-center gap-1">
-                                        <span className="text-primary">@</span>
-                                        <h2 className="font-medium text-gray-300 text-sm truncate">
+                                        <span className="text-xs text-primary">@</span>
+                                        <span className="text-xs text-gray-500 truncate">
                                             {username || "User"}
-                                        </h2>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Divider */}
-                            <div className="divider my-3 before:bg-white/10 after:bg-white/10"></div>
+                            <div className="divider my-3 before:bg-gray-200 after:bg-gray-200"></div>
 
-                            {/* Email */}
                             <div className="flex items-center gap-2 px-1">
-                                <div className="text-white/60">
-                                    <EnvelopeSimpleIcon size={16} color="#fafafa" weight="fill" />
-                                </div>
-                                <p className="truncate text-sm text-white/70 flex-1">
+                                <EnvelopeSimpleIcon size={14} className="text-gray-400" weight="fill" />
+                                <span className="text-xs text-gray-600 truncate flex-1">
                                     {email || "user@example.com"}
-                                </p>
+                                </span>
                             </div>
 
-                            {/* Edit profile button */}
                             <Link
                                 to="/profile/edit-profile"
-                                className="btn btn-primary btn-sm mt-4 w-full gap-2 hover:scale-[1.02] transition-transform duration-200"
+                                className="btn btn-primary btn-xs mt-3 w-full gap-1 hover:scale-[1.02] transition-transform"
                             >
                                 Edit Profile
                             </Link>
                         </div>
 
-                        {/* Sidebar menu - scrollable */}
-                        <ul className="menu w-full p-3 overflow-y-auto">
-                            <li>
-                                <Link to="/profile">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        strokeLinejoin="round"
-                                        strokeLinecap="round"
-                                        strokeWidth="2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        className="size-5"
-                                    >
-                                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
-                                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    </svg>
-                                    Profile
-                                </Link>
-                            </li>
-                            <li>
-                                <HashLink to="/profile#services" smooth>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        strokeLinejoin="round"
-                                        strokeLinecap="round"
-                                        strokeWidth="2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        className="size-5"
-                                    >
-                                        <path d="M20 7h-9" />
-                                        <path d="M14 17H5" />
-                                        <circle cx="17" cy="17" r="3" />
-                                        <circle cx="7" cy="7" r="3" />
-                                    </svg>
-                                    Services
-                                </HashLink>
-                            </li>
-                        </ul>
+                        {/* Navigation Menu */}
+                        <div className="space-y-1">
+                            
+                            {navItems.map((item, index) => (
+                                <div key={index}>
+                                    {renderNavLink(item)}
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Logout button - fixed at bottom */}
-                    <div className="p-3 border-t border-white/10 bg-base-100/50 backdrop-blur-sm shrink-0">
+                    {/* Logout Button */}
+                    <div className="p-3 border-t border-gray-100 bg-white/50 backdrop-blur-sm">
                         <button
                             onClick={handleLogout}
-                            className="btn btn-ghost btn-sm w-full gap-2 text-error hover:bg-error/10 hover:text-error"
+                            className="btn btn-ghost btn-sm w-full gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
                         >
-                            <SignOutIcon size={20} weight="bold" />
-                            Logout
+                            <SignOutIcon size={18} weight="bold" />
+                            <span>Logout</span>
                         </button>
                     </div>
                 </div>

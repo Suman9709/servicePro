@@ -23,15 +23,15 @@ const Profile = () => {
 
 
   return (
-    <div className="min-h-full w-full  text-gray-900 rounded-lg">
+    <div className="min-h-full w-full flex flex-col items-center justify-center pt-4  text-gray-900 rounded-lg">
 
       {/* ================================================= */}
       {/* PAGE HEADER */}
       {/* ================================================= */}
 
-      <div className="w-full  border shadow-sm rounded-2xl border-gray-200">
+      <div className="w-[95%]  border shadow-sm rounded-2xl border-gray-200">
 
-        <div className="w-full px-6 md:px-8 lg:px-10 py-6">
+        <div className="w-full px-6 md:px-6 py-6">
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
@@ -48,6 +48,14 @@ const Profile = () => {
                 Manage your account and view your service activity.
               </p>
             </div>
+
+           {user?.role==='customer' && (
+            <div>
+              <button className=" w-52 sm:w-52 items-center btn bg-blue-600 hover:bg-blue-700 text-white border-none px-2 shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-70 ">
+                Create New Service Request
+              </button>
+            </div>
+           )}
           </div>
 
         </div>

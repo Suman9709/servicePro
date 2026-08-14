@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar"
-// import { useAuth } from "../context/AuthContext";
-import { useLogout, useProfile } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLogout, useProfile } from "../hooks/useAuth"
+import {useNavigate} from "react-router-dom"
 
-const ProfileLayout = () => {
+const AdminDashboardLayout = () => {
+    const navigate = useNavigate();
     const { data: user } = useProfile()
     const logoutMutation = useLogout();
-    const navigate = useNavigate();
+
     const handleLogout = async () => {
         try {
             await logoutMutation.mutateAsync();
@@ -27,7 +27,7 @@ const ProfileLayout = () => {
                 last_name={user?.last_name}
                 username={user?.username}
                 email={user?.email}
-                role={user?.role}
+                role ={user?.role}
                 maincontent={<Outlet />}
                 onLogout={handleLogout}
             />
@@ -35,4 +35,5 @@ const ProfileLayout = () => {
     )
 
 }
-export default ProfileLayout
+
+export default AdminDashboardLayout

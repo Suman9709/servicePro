@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from accounts.models import RegisterUserModel
 from rest_framework import viewsets
+from engineers.models import EngineerProfile
 from services.serializers import AdminServiceRequestSerializer, CategorySerializer
 from engineers.serializers import EngineerProfileSerializer
 from dashboard.serializers import FeedBackSerializer
@@ -12,7 +13,7 @@ from accounts.serializers import CustomerProfileSerializer
 # Create your views here.
 
 class GetAllEngineersList(viewsets.ModelViewSet):
-    queryset = RegisterUserModel.objects.filter(role=RegisterUserModel.Role.ENGINEER)
+    queryset = EngineerProfile.objects.select_related("user").all()
     serializer_class = EngineerProfileSerializer
     
 
