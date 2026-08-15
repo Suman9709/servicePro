@@ -9,12 +9,14 @@ import {
   LightningIcon,
   HammerIcon,
   FanIcon,
+  XIcon,
 } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import { useDeleteCategory, useGetCategories } from "../hooks/useAdmin";
 import type { CategoryResponse } from "../services/adminservice";
 import CreateCategory from "./CreateCategory";
+import EditCategory from "../Pages/EditCategory";
 
 
 // ==============================
@@ -44,13 +46,10 @@ const ManageCategory = () => {
 
   const [search, setSearch] = useState("");
   const [isCreateCategoryFormOpen, setIsCreateCategoryFormOpen] = useState(false);
+  const [editCategoryById, setEditCategoryById] = useState<number | null>(null)
 
-  const {
-    data: categories,
-    isLoading,
-    isError,
-    error,
-  } = useGetCategories();
+  const { data: categories, isLoading, isError, error } = useGetCategories();
+
 
   const deleteCategoryMutation = useDeleteCategory();
 
@@ -87,13 +86,16 @@ const ManageCategory = () => {
     setIsCreateCategoryFormOpen(false);
   };
 
-
   const handleEditCategory = (
     category: CategoryResponse
   ) => {
-    console.log("Edit Category:", category);
+    setEditCategoryById(category.id)
+
   };
 
+  const handleCloseEditCategory = () => {
+    setEditCategoryById(null);
+  }
 
 
   if (isLoading) {
@@ -527,57 +529,55 @@ const ManageCategory = () => {
                           />
 
                         </button>
-
-
                         {/* Delete */}
 
                         <button
                           onClick={() =>
                             handleDeleteCategory(category.id)
                           }
-                          
-                        className="
+
+                          className="
                         btn
                         btn-ghost
                         btn-sm
                         text-red-600
                         hover:bg-red-50
                         "
-                        title="Delete category"
+                          title="Delete category"
                         >
 
-                        <TrashIcon
-                          size={18}
-                        />
+                          <TrashIcon
+                            size={18}
+                          />
 
-                      </button>
+                        </button>
 
-                    </div>
+                      </div>
 
-                  </td>
+                    </td>
 
                   </tr>
 
-            )
+                )
               )}
 
 
-            {/* ================================================= */}
-            {/* NO RESULTS */}
-            {/* ================================================= */}
+              {/* ================================================= */}
+              {/* NO RESULTS */}
+              {/* ================================================= */}
 
-            {filteredCategories?.length === 0 && (
+              {filteredCategories?.length === 0 && (
 
-              <tr>
+                <tr>
 
-                <td
-                  colSpan={4}
-                  className="py-16 text-center"
-                >
+                  <td
+                    colSpan={4}
+                    className="py-16 text-center"
+                  >
 
-                  <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center">
 
-                    <div className="
+                      <div className="
                                                 flex
                                                 h-14
                                                 w-14
@@ -588,49 +588,97 @@ const ManageCategory = () => {
                                                 text-gray-400
                                             ">
 
-                      <FolderOpenIcon
-                        size={28}
-                      />
+                        <FolderOpenIcon
+                          size={28}
+                        />
 
-                    </div>
+                      </div>
 
 
-                    <p className="
+                      <p className="
                                                 mt-4
                                                 font-medium
                                                 text-gray-600
                                             ">
-                      No categories found
-                    </p>
+                        No categories found
+                      </p>
 
 
-                    <p className="
+                      <p className="
                                                 mt-1
                                                 text-sm
                                                 text-gray-400
                                             ">
 
-                      {search
-                        ? "Try searching for another category."
-                        : "Create your first service category."}
+                        {search
+                          ? "Try searching for another category."
+                          : "Create your first service category."}
 
-                    </p>
+                      </p>
 
-                  </div>
+                    </div>
 
-                </td>
+                  </td>
 
-              </tr>
+                </tr>
 
-            )}
+              )}
 
-          </tbody>
+            </tbody>
 
-        </table>
+          </table>
+
+        </div>
 
       </div>
 
-    </div>
+      {
+        editCategoryById !== null && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+
+            <div className="w-full max-w-2xl rounded-xl bg-white shadow-2xl">
+
+              {/* Modal Header */}
+
+              <div className="flex items-center justify-between border-b border-gray-200 p-6">
+
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Edit Category
+                  </h2>
+
+                  <p className="mt-1 text-sm text-gray-500">
+                    Update category information.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleCloseEditCategory}
+                  className="btn btn-sm btn-circle btn-ghost text-gray-600 hover:bg-gray-100"
+                >
+                  <XIcon size={20} />
+                </button>
+
+              </div>
+
+
+              {/* Edit Form */}
+
+              <div className="max-h-[75vh] overflow-y-auto">
+
+                <EditCategory
+                  id={editCategoryById}
+                  onClose={handleCloseEditCategory}
+                />
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
 
     </div >
   );
