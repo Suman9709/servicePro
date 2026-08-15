@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createCategory, createEngineer, getAllCategory, getEngineers, type CategoryList, type createCategoryData, type EngineerData, type EngineerListResponse } from "../services/adminservice"
+import { createCategory, createEngineer, deleteCategory, getAllCategory, getCategoryById, getEngineers, updateCategory, type CategoryList, type createCategoryData, type EngineerData, type EngineerListResponse } from "../services/adminservice"
 
 
 export const useCreateEngineer = () => {
@@ -39,5 +39,35 @@ export const useGetCategories = () => {
         queryKey: ["categories"],
         queryFn: getAllCategory,
         retry: false,
+    })
+}
+
+export const useGetCategoryById = (id: number) => {
+    return useQuery<CategoryList>({
+        queryKey: ["category", id],
+        queryFn: () => getCategoryById(id),
+        enabled: !!id,
+    })
+}
+
+export const useUpdateCategory = (id: number) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: createCategoryData) => updateCategory(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["categories"] })
+            queryClient.invalidateQueries({ queryKey: ["category", id] })
+        }
+    })
+}
+
+export const useDeleteCategory = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id: number) => deleteCategory(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["categories"] })
+           
+        }
     })
 }

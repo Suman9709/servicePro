@@ -111,3 +111,17 @@ export const getAllCategory = async():Promise<CategoryList[]>=>{
     const response = await adminaxios.get<CategoryList[]>('dashboard/service-categories/')
     return response.data;
 }
+
+export const getCategoryById = async(id:number):Promise<CategoryList>=>{
+    const response = await adminaxios.get<CategoryList>(`dashboard/service-categories/${id}/`)
+    return response.data;
+}
+
+export const updateCategory = async(id:number, data:createCategoryData):Promise<CategoryResponse>=>{
+    const response = await adminaxios.put<CategoryResponse>(`dashboard/service-categories/${id}/`, data);
+    return response.data;
+}
+
+export const deleteCategory = async(id:number):Promise<void> =>{
+    await adminaxios.delete(`dashboard/service-categories/${id}/`);
+}

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { XIcon } from "@phosphor-icons/react";
 import { useCreateCategory } from "../hooks/useAdmin";
 
 interface CreateCategoryFormProps {
@@ -13,7 +12,7 @@ const CreateCategory = ({ onClose }: CreateCategoryFormProps) => {
     const createCategoryMutation = useCreateCategory();
 
     const handleSubmit = async (
-        e: React.FormEvent<HTMLFormElement>
+        e: React.SubmitEvent<HTMLFormElement>
     ) => {
         e.preventDefault();
 

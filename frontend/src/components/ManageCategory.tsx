@@ -12,7 +12,7 @@ import {
 } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { useGetCategories } from "../hooks/useAdmin";
+import { useDeleteCategory, useGetCategories } from "../hooks/useAdmin";
 import type { CategoryResponse } from "../services/adminservice";
 import CreateCategory from "./CreateCategory";
 
@@ -52,6 +52,16 @@ const ManageCategory = () => {
     error,
   } = useGetCategories();
 
+  const deleteCategoryMutation = useDeleteCategory();
+
+  const handleDeleteCategory = async (categoryId: number) => {
+    try {
+      await deleteCategoryMutation.mutateAsync(categoryId);
+    }
+    catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  }
 
   const filteredCategories = categories?.filter((category) =>
     category.name
@@ -85,11 +95,6 @@ const ManageCategory = () => {
   };
 
 
-  const handleDeleteCategory = (
-    category: CategoryResponse
-  ) => {
-    console.log("Delete Category:", category);
-  };
 
   if (isLoading) {
     return (
@@ -165,42 +170,42 @@ const ManageCategory = () => {
       </div>
       {
         isCreateCategoryFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
 
-                    <div className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-2xl">
+            <div className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-2xl">
 
-                        {/* Modal Header */}
-                        <div className="mb-6 flex items-center justify-between border-b border-gray-200 pb-4">
-                            <div>
-                                <h2 className="text-xl font-semibold text-gray-900">
-                                    Create Category
-                                </h2>
+              {/* Modal Header */}
+              <div className="mb-6 flex items-center justify-between border-b border-gray-200 pb-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Create Category
+                  </h2>
 
-                                <p className="mt-1 text-sm text-gray-500">
-                                    Add a new service category.
-                                </p>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={handleCloseCreateCategoryForm}
-                                className="btn btn-sm btn-circle btn-ghost text-black transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                            >
-                                ✕
-                            </button>
-                        </div>
-
-                        {/* Form */}
-                        <div className="max-h-[75vh] overflow-y-auto">
-                            <CreateCategory
-                                onClose={() => {
-                                    setIsCreateCategoryFormOpen(false);
-                                }}
-                               
-                            />
-                        </div>
-                    </div>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Add a new service category.
+                  </p>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={handleCloseCreateCategoryForm}
+                  className="btn btn-sm btn-circle btn-ghost text-black transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Form */}
+              <div className="max-h-[75vh] overflow-y-auto">
+                <CreateCategory
+                  onClose={() => {
+                    setIsCreateCategoryFormOpen(false);
+                  }}
+
+                />
+              </div>
+            </div>
+          </div>
         )
 
       }
@@ -528,52 +533,51 @@ const ManageCategory = () => {
 
                         <button
                           onClick={() =>
-                            handleDeleteCategory(
-                              category
-                            )
+                            handleDeleteCategory(category.id)
                           }
-                          className="
-                                                        btn
-                                                        btn-ghost
-                                                        btn-sm
-                                                        text-red-600
-                                                        hover:bg-red-50
-                                                    "
-                          title="Delete category"
+                          
+                        className="
+                        btn
+                        btn-ghost
+                        btn-sm
+                        text-red-600
+                        hover:bg-red-50
+                        "
+                        title="Delete category"
                         >
 
-                          <TrashIcon
-                            size={18}
-                          />
+                        <TrashIcon
+                          size={18}
+                        />
 
-                        </button>
+                      </button>
 
-                      </div>
+                    </div>
 
-                    </td>
+                  </td>
 
                   </tr>
 
-                )
+            )
               )}
 
 
-              {/* ================================================= */}
-              {/* NO RESULTS */}
-              {/* ================================================= */}
+            {/* ================================================= */}
+            {/* NO RESULTS */}
+            {/* ================================================= */}
 
-              {filteredCategories?.length === 0 && (
+            {filteredCategories?.length === 0 && (
 
-                <tr>
+              <tr>
 
-                  <td
-                    colSpan={4}
-                    className="py-16 text-center"
-                  >
+                <td
+                  colSpan={4}
+                  className="py-16 text-center"
+                >
 
-                    <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center">
 
-                      <div className="
+                    <div className="
                                                 flex
                                                 h-14
                                                 w-14
@@ -584,51 +588,51 @@ const ManageCategory = () => {
                                                 text-gray-400
                                             ">
 
-                        <FolderOpenIcon
-                          size={28}
-                        />
+                      <FolderOpenIcon
+                        size={28}
+                      />
 
-                      </div>
+                    </div>
 
 
-                      <p className="
+                    <p className="
                                                 mt-4
                                                 font-medium
                                                 text-gray-600
                                             ">
-                        No categories found
-                      </p>
+                      No categories found
+                    </p>
 
 
-                      <p className="
+                    <p className="
                                                 mt-1
                                                 text-sm
                                                 text-gray-400
                                             ">
 
-                        {search
-                          ? "Try searching for another category."
-                          : "Create your first service category."}
+                      {search
+                        ? "Try searching for another category."
+                        : "Create your first service category."}
 
-                      </p>
+                    </p>
 
-                    </div>
+                  </div>
 
-                  </td>
+                </td>
 
-                </tr>
+              </tr>
 
-              )}
+            )}
 
-            </tbody>
+          </tbody>
 
-          </table>
-
-        </div>
+        </table>
 
       </div>
 
     </div>
+
+    </div >
   );
 };
 
