@@ -45,6 +45,41 @@ export interface EngineerListResponse {
     updated_at: string
 }
 
+export interface createCategoryData{
+    name:string,
+    description:string,
+}
+
+export interface CategoryResponse{
+    id:number,
+    name:string,
+    description:string,
+    created_at:string,
+    updated_at:string
+}
+
+export interface Service {
+    id: number;
+    category: number;
+    name: string;
+    description: string;
+    estimated_price: string;
+    estimated_time: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CategoryList {
+    id: number;
+    name: string;
+    description: string;
+    icon: string | null;
+    services: Service[];
+    created_at: string;
+    updated_at: string;
+}
+
+
 export const createEngineer = async (data: EngineerData): Promise<EngineerResponse> => {
     const response = await adminaxios.post<EngineerResponse>('engineers/create/', data);
     return response.data;
@@ -55,7 +90,24 @@ export const getEngineers = async (): Promise<EngineerListResponse[]> => {
     console.log("engineers", response.data);
     return response.data;
 }
+export const getEngineerById = async(id:number):Promise<EngineerListResponse>=>{
+    const response = await adminaxios.get<EngineerListResponse>(`dashboard/engineers/${id}/`);
+    return response.data;
+}
+
+export const deleteEngineer = async(id:number):Promise<void>=>{
+    await adminaxios.delete(`dashboard/engineers/${id}/`);
+}
 
 
+// category services
 
+export const createCategory = async(data:createCategoryData):Promise<CategoryResponse>=>{
+    const response = await adminaxios.post<CategoryResponse>('dashboard/service-categories/', data);
+    return response.data;
+}
 
+export const getAllCategory = async():Promise<CategoryList[]>=>{
+    const response = await adminaxios.get<CategoryList[]>('dashboard/service-categories/')
+    return response.data;
+}

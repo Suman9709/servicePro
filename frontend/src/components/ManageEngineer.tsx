@@ -18,7 +18,7 @@ import { useGetEngineers } from "../hooks/useAdmin";
 const ManageEngineer = () => {
     const [isEngineerModalOpen, setIsEngineerModalOpen] = useState(false);
 
-    const { data: engineersData, isLoading, isError } = useGetEngineers();
+    const { data: engineersData, isLoading } = useGetEngineers();
 
     const handleEngineerForm = () => {
         setIsEngineerModalOpen(true);

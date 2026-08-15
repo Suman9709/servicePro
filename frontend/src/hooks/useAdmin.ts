@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createEngineer, getEngineers, type EngineerData, type EngineerListResponse } from "../services/adminservice"
+import { createCategory, createEngineer, getAllCategory, getEngineers, type CategoryList, type createCategoryData, type EngineerData, type EngineerListResponse } from "../services/adminservice"
 
 
 export const useCreateEngineer = () => {
@@ -14,10 +14,30 @@ export const useCreateEngineer = () => {
     })
 }
 
-export const useGetEngineers = ()=>{
+export const useGetEngineers = () => {
     return useQuery<EngineerListResponse[]>({
         queryKey: ["engineers"],
         queryFn: getEngineers,
+        retry: false,
+    })
+}
+
+
+export const useCreateCategory = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: createCategoryData) => createCategory(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["categories"] })
+        }
+    })
+}
+
+export const useGetCategories = () => {
+    return useQuery<CategoryList[]>({
+        queryKey: ["categories"],
+        queryFn: getAllCategory,
         retry: false,
     })
 }
