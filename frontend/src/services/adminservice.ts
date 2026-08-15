@@ -105,12 +105,12 @@ export interface ServiceRequestResponse {
     customer:number;
     engineer:number;
     service:number;
-    customer_name:String;
-    engineer_name:String;
-    service_name:String;
-    description: String
-    status:String;
-    created_at: String
+    customer_name:string;
+    engineer_name:string;
+    service_name:string;
+    description: string
+    status:string;
+    created_at: Date
     booking_date: Date
 }
 
