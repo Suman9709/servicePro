@@ -9,7 +9,7 @@ export const useCreateEngineer = () => {
 
         onSuccess: () => {
             quryClient.invalidateQueries({ queryKey: ["engineers"] });
-           
+
         }
     })
 }
@@ -86,6 +86,27 @@ export const useCreateService = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (data: CreateService) => createService(data),
-        onSuccess:()=> queryClient.invalidateQueries({ queryKey: ["services"] })
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["services"] })
     })
 }
+
+// export const useUpdateService = (id: number) => {
+//     const queryClient = useQueryClient();
+
+//     return useMutation({
+//         mutationFn: (data: CreateService) => updateService(id, data),
+//         onSuccess: () => {
+//             queryClient.invalidateQueries({ queryKey: ["services"] })
+//         }
+//     })
+// }
+
+// export const useDeleteServices = () => {
+//     const queryClient = useQueryClient()
+//     return useMutation({
+//         mutationFn: (id: number) => deleteService(id),
+//         onSuccess: () => {
+//             queryClient.invalidateQueries({ queryKey: ['services'] })
+//         }
+//     })
+// }

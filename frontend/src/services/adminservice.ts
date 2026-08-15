@@ -162,4 +162,13 @@ export const createService = async (data:CreateService):Promise<CreateService> =
 
 }
 
+// export const updateService = async(id:number, data:CreateService):Promise<CreateService>=>{
+//     const response = await adminaxios.put<CreateService>(`services/allservices/${id}/`, data)
+//     return response.data;
+// }
+
+// export const deleteService = async(id:number):Promise<void>=>{
+//     await adminaxios.delete(`services/allservices/${id}/`)
+// }
+
 // export const deleteServiceById

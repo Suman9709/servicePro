@@ -2,8 +2,8 @@ import {
   WrenchIcon,
   PlusIcon,
   MagnifyingGlassIcon,
-  PencilSimpleIcon,
-  TrashIcon,
+
+
   FolderOpenIcon,
 } from "@phosphor-icons/react";
 
@@ -11,7 +11,8 @@ import { useMemo, useState } from "react";
 
 import {
 
-  useCreateService,
+
+
   useGetAllServices,
 } from "../hooks/useAdmin";
 import CreateService from "./CreateService";
@@ -32,9 +33,6 @@ const ManageService = () => {
   const [isCreateServiceOpen, setIsCreateServiceOpen] =
     useState(false);
 
-  const [editingServiceId, setEditingServiceId] =
-    useState<number | null>(null);
-
 
   // =====================================================
   // GET SERVICES
@@ -47,8 +45,6 @@ const ManageService = () => {
     error,
   } = useGetAllServices();
 
-
-  const createServiceMutation = useCreateService()
   // =====================================================
   // FILTER SERVICES
   // =====================================================
@@ -114,57 +110,8 @@ const ManageService = () => {
 
   }, [services]);
 
+  const handleCreateService = async () => {
 
-  // =====================================================
-  // DELETE
-  // =====================================================
-
-  const handleDeleteService = async (
-    serviceId: number
-  ) => {
-
-    try {
-
-      console.log(serviceId)
-
-    } catch (error) {
-
-      console.error(
-        "Error deleting service:",
-        error
-      );
-
-    }
-
-  };
-
-
-  // =====================================================
-  // EDIT
-  // =====================================================
-
-  const handleEditService = (
-    serviceId: number
-  ) => {
-
-    setEditingServiceId(serviceId);
-
-  };
-
-
-  const handleCloseEditService = () => {
-
-    setEditingServiceId(null);
-
-  };
-
-
-  // =====================================================
-  // CREATE
-  // =====================================================
-
-  const handleCreateService = async() => {
-  
     setIsCreateServiceOpen(true);
 
   };
@@ -329,13 +276,13 @@ const ManageService = () => {
 
             <div className="max-h-[75vh] overflow-y-auto">
 
-              
 
-                            <CreateService
-                                onClose={handleCloseCreateService}
-                            />
 
-                            
+              <CreateService
+                onClose={handleCloseCreateService}
+              />
+
+
 
             </div>
 
@@ -569,9 +516,7 @@ const ManageService = () => {
                   Estimated Time
                 </th>
 
-                <th className="text-right">
-                  Actions
-                </th>
+              
 
               </tr>
 
@@ -638,7 +583,7 @@ const ManageService = () => {
                                                 bg-purple-50
                                                 text-purple-700
                                             ">
-                       {service.category_name}
+                        {service.category_name}
                       </span>
 
                     </td>
@@ -687,66 +632,6 @@ const ManageService = () => {
                     </td>
 
 
-                    {/* Actions */}
-
-                    <td>
-
-                      <div className="flex justify-end gap-px">
-
-
-                        {/* Edit */}
-
-                        <button
-                          onClick={() =>
-                            handleEditService(
-                              service.id
-                            )
-                          }
-                          className="
-                                                        btn
-                                                        btn-ghost
-                                                        btn-sm
-                                                        text-blue-600
-                                                        hover:bg-blue-50
-                                                    "
-                          title="Edit service"
-                        >
-
-                          <PencilSimpleIcon
-                            size={18}
-                          />
-
-                        </button>
-
-
-                        {/* Delete */}
-
-                        <button
-                          onClick={() =>
-                            handleDeleteService(
-                              service.id
-                            )
-                          }
-                          
-                          className="
-                                                        btn
-                                                        btn-ghost
-                                                        btn-sm
-                                                        text-red-600
-                                                        hover:bg-red-50
-                                                    "
-                          title="Delete service"
-                        >
-
-                          <TrashIcon
-                            size={18}
-                          />
-
-                        </button>
-
-                      </div>
-
-                    </td>
 
                   </tr>
 
@@ -815,64 +700,7 @@ const ManageService = () => {
       </div>
 
 
-      {/* ================================================= */}
-      {/* EDIT SERVICE MODAL */}
-      {/* ================================================= */}
-
-      {editingServiceId !== null && (
-
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-
-          <div className="w-full max-w-2xl rounded-xl bg-white shadow-2xl">
-
-            {/* Modal Header */}
-
-            <div className="flex items-center justify-between border-b border-gray-200 p-6">
-
-              <div>
-
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Edit Service
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  Update service information.
-                </p>
-
-              </div>
-
-
-              <button
-                type="button"
-                onClick={handleCloseEditService}
-                className="btn btn-sm btn-circle btn-ghost"
-              >
-                ✕
-              </button>
-
-            </div>
-
-
-            {/* Edit Form */}
-
-            <div className="max-h-[75vh] overflow-y-auto">
-
-              {/*
-
-                            <EditService
-                                id={editingServiceId}
-                                onClose={handleCloseEditService}
-                            />
-
-                            */}
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
+     
 
     </div>
   );
