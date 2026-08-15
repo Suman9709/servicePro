@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createCategory, createEngineer, deleteCategory, getAllCategory, getCategoryById, getEngineers, updateCategory, type CategoryList, type createCategoryData, type EngineerData, type EngineerListResponse } from "../services/adminservice"
+import { createCategory, createEngineer, createService, deleteCategory, getAllCategory, getAllServices, getCategoryById, getEngineers, updateCategory, type CategoryList, type createCategoryData, type CreateService, type EngineerData, type EngineerListResponse, type ServiceResponse } from "../services/adminservice"
 
 
 export const useCreateEngineer = () => {
@@ -9,7 +9,7 @@ export const useCreateEngineer = () => {
 
         onSuccess: () => {
             quryClient.invalidateQueries({ queryKey: ["engineers"] });
-            queryKey: ["engineers"]
+           
         }
     })
 }
@@ -67,7 +67,25 @@ export const useDeleteCategory = () => {
         mutationFn: (id: number) => deleteCategory(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["categories"] })
-           
+
         }
+    })
+}
+
+
+// services
+export const useGetAllServices = () => {
+    return useQuery<ServiceResponse[]>({
+        queryKey: ["services"],
+        queryFn: getAllServices,
+        retry: false,
+    })
+}
+
+export const useCreateService = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: CreateService) => createService(data),
+        onSuccess:()=> queryClient.invalidateQueries({ queryKey: ["services"] })
     })
 }

@@ -1,106 +1,315 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { useCreateService, useGetCategories } from "../hooks/useAdmin";
 
-const CreateService = () => {
+interface CreateFormProps {
+    onClose: () => void;
+}
+
+const CreateService = ({ onClose }: CreateFormProps) => {
     const [formData, setFormData] = useState({
-        category: '',
-        name: '',
-        description: '',
-        estimatedTime: '',
-        estimatedCost: ''
-    })
+        category: "",
+        name: "",
+        description: "",
+        estimatedTime: "",
+        estimatedCost: "",
+    });
+
+    const { data: categories, isLoading: isCategoriesLoading } =
+        useGetCategories();
+    const createServiceMutation = useCreateService();
+
+    const handleChange = (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >
+    ) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const data = {
+            category: Number(formData.category),
+            name: formData.name.trim(),
+            description: formData.description.trim(),
+            estimated_time: formData.estimatedTime,
+            estimated_price: formData.estimatedCost,
+        };
+        try {
+            await createServiceMutation.mutateAsync(data)
+            onClose();
+            console.log(data)
+        }
+        catch (error) {
+            console.error("error in creating service", error)
+        }
+
+
+
+        // createServiceMutation.mutate(data)
+    };
+
     return (
-        <div>
-            <h2 className="text-2xl font-bold mb-4">Create Service</h2>
-            <form >
-                {/* select the category */}
-                <fieldset className="fieldset">
-                    <legend className="fieldset-legend">Category</legend>
-                    <select defaultValue="Pick a category" className="select">
-                        <option disabled={true}>Select the category</option>
-                        <option>AC Repair</option>
-                        <option>Plumbing</option>
-                        <option>Carpenter</option>
-                    </select>
-                </fieldset>
-                <fieldset className="mb-5">
-                    <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                        Name
-                    </label>
+        <form onSubmit={handleSubmit} className="p-6">
 
-                    <input
-                        id="name"
-                        type="text"
-                        className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-                        placeholder="Enter service name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    />
-                </fieldset>
-                <fieldset className="mb-5">
-                    <label
-                        htmlFor="description"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                    >
-                        Description
-                    </label>
+            {/* Category */}
 
-                    <input
-                        id="description"
-                        type="text"
-                        className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-                        placeholder="Enter service description"
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                </fieldset>
-                <fieldset className="mb-5">
+            <div className="mb-5">
+                <label
+                    htmlFor="category"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                    disabled={isCategoriesLoading}
+                    className="
+                        select
+                        h-12
+                        w-full
+                        rounded-lg
+                        border
+                        border-gray-300
+                        bg-white
+                        text-gray-900
+                        outline-none
+                        transition
+                        focus:border-blue-500
+                        focus:ring-2
+                        focus:ring-blue-100
+                    "
+                >
+                    <option value="" disabled>
+                        {isCategoriesLoading
+                            ? "Loading categories..."
+                            : "Select a category"}
+                    </option>
+
+                    {categories?.map((category) => (
+                        <option
+                            key={category.id}
+                            value={category.id}
+                        >
+                            {category.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+
+            {/* Service Name */}
+
+            <div className="mb-5">
+                <label
+                    htmlFor="name"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                    Service Name
+                </label>
+
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="e.g. Tap Repair"
+                    required
+                    className="
+                        h-12
+                        w-full
+                        rounded-lg
+                        border
+                        border-gray-300
+                        bg-white
+                        px-4
+                        text-gray-900
+                        outline-none
+                        transition
+                        placeholder:text-gray-400
+                        focus:border-blue-500
+                        focus:ring-2
+                        focus:ring-blue-100
+                    "
+                />
+            </div>
+
+
+            {/* Description */}
+
+            <div className="mb-5">
+                <label
+                    htmlFor="description"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                >
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Describe what this service includes..."
+                    rows={4}
+                    required
+                    className="
+                        w-full
+                        resize-none
+                        rounded-lg
+                        border
+                        border-gray-300
+                        bg-white
+                        px-4
+                        py-3
+                        text-gray-900
+                        outline-none
+                        transition
+                        placeholder:text-gray-400
+                        focus:border-blue-500
+                        focus:ring-2
+                        focus:ring-blue-100
+                    "
+                />
+            </div>
+
+
+            {/* Time + Price */}
+
+            <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                {/* Estimated Time */}
+
+                <div>
                     <label
                         htmlFor="estimatedTime"
-                        className="block text-sm font-medium text-gray-700 mb-2"
+                        className="mb-2 block text-sm font-medium text-gray-700"
                     >
                         Estimated Time
                     </label>
 
                     <input
                         id="estimatedTime"
-                        type="text"
-                        className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-                        placeholder="Enter estimated time"
+                        name="estimatedTime"
+                        type="time"
+                        step="1"
                         value={formData.estimatedTime}
-                        onChange={(e) => setFormData({ ...formData, estimatedTime: e.target.value })}
+                        onChange={handleChange}
+                        required
+                        className="
+                            h-12
+                            w-full
+                            rounded-lg
+                            border
+                            border-gray-300
+                            bg-white
+                            px-4
+                            text-gray-900
+                            outline-none
+                            transition
+                            focus:border-blue-500
+                            focus:ring-2
+                            focus:ring-blue-100
+                        "
                     />
-                </fieldset>
-                <fieldset className="mb-5">
+
+                    <p className="mt-1 text-xs text-gray-400">
+                        Example: 00:30:00
+                    </p>
+                </div>
+
+
+                {/* Estimated Price */}
+
+                <div>
                     <label
                         htmlFor="estimatedCost"
-                        className="block text-sm font-medium text-gray-700 mb-2"
+                        className="mb-2 block text-sm font-medium text-gray-700"
                     >
-                        Estimated Cost
+                        Estimated Price
                     </label>
 
-                    <input
-                        id="estimatedCost"
-                        type="text"
-                        className="w-full h-12 px-4 rounded-lg bg-white border border-gray-300 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-                        placeholder="Enter estimated cost"
-                        value={formData.estimatedCost}
-                        onChange={(e) => setFormData({ ...formData, estimatedCost: e.target.value })}
-                    />
-                </fieldset>
+                    <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                            ₹
+                        </span>
+
+                        <input
+                            id="estimatedCost"
+                            name="estimatedCost"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={formData.estimatedCost}
+                            onChange={handleChange}
+                            placeholder="199.00"
+                            required
+                            className="
+                                h-12
+                                w-full
+                                rounded-lg
+                                border
+                                border-gray-300
+                                bg-white
+                                pl-9
+                                pr-4
+                                text-gray-900
+                                outline-none
+                                transition
+                                placeholder:text-gray-400
+                                focus:border-blue-500
+                                focus:ring-2
+                                focus:ring-blue-100
+                            "
+                        />
+                    </div>
+                </div>
+
+            </div>
+
+
+            {/* Buttons */}
+
+            <div className="flex justify-end gap-3 border-t border-gray-200 pt-5">
+
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="
+                        btn
+                        min-w-24
+                        border-gray-300
+                        bg-white
+                        text-gray-700
+                        hover:bg-gray-50
+                    "
+                >
+                    Cancel
+                </button>
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100 transition"
+                    className="btn btn-primary min-w-32"
                 >
                     Create Service
                 </button>
 
-            </form>
-        </div>
-    )
-}
+            </div>
 
-export default CreateService
+        </form>
+    );
+};
+
+export default CreateService;

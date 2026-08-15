@@ -3,11 +3,13 @@ from services.models import BookingModel
 from services.models import CategoryModel, ServiceModel
    
 class ServiceSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source = "category.name", read_only= True)
     class Meta:
         model = ServiceModel
         fields = [
             'id',
             'category',
+            'category_name',
             'name',
             'description',
             'estimated_price',

@@ -11,7 +11,7 @@ router.register(r'service-requests', ServiceRequestView, basename='allbooking')
 # router.register(r'bookings', CreateServiceRequestView, basename='booking')
 
 urlpatterns =[
-    path('bookings/', CreateServiceRequestView.as_view(), name='create-service-request'),
+    path('bookings/', CreateServiceRequestView.as_view(), name='create-service-request'), # for booking the service
     path('bookings/<int:id>/delete/', DeleteServicerequest.as_view(), name='delete-service-request'),
     path('customer-service-requests/', CustomerServiceHistoryView.as_view(), name='customer-service-history'),
 ]+ router.urls

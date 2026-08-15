@@ -45,17 +45,17 @@ export interface EngineerListResponse {
     updated_at: string
 }
 
-export interface createCategoryData{
-    name:string,
-    description:string,
+export interface createCategoryData {
+    name: string,
+    description: string,
 }
 
-export interface CategoryResponse{
-    id:number,
-    name:string,
-    description:string,
-    created_at:string,
-    updated_at:string
+export interface CategoryResponse {
+    id: number,
+    name: string,
+    description: string,
+    created_at: string,
+    updated_at: string
 }
 
 export interface Service {
@@ -79,6 +79,26 @@ export interface CategoryList {
     updated_at: string;
 }
 
+export interface ServiceResponse {
+    id: number;
+    category: number;
+    category_name: string;
+    name: string;
+    description: string;
+    estimated_price: string;
+    estimated_time: string;
+    created_at: string;
+    updated_at: string;
+
+}
+export interface CreateService {
+
+    category: number;
+    name: String;
+    description: String;
+    estimated_price: String
+    estimated_time: String
+}
 
 export const createEngineer = async (data: EngineerData): Promise<EngineerResponse> => {
     const response = await adminaxios.post<EngineerResponse>('engineers/create/', data);
@@ -90,38 +110,56 @@ export const getEngineers = async (): Promise<EngineerListResponse[]> => {
     console.log("engineers", response.data);
     return response.data;
 }
-export const getEngineerById = async(id:number):Promise<EngineerListResponse>=>{
+export const getEngineerById = async (id: number): Promise<EngineerListResponse> => {
     const response = await adminaxios.get<EngineerListResponse>(`dashboard/engineers/${id}/`);
     return response.data;
 }
 
-export const deleteEngineer = async(id:number):Promise<void>=>{
+export const deleteEngineer = async (id: number): Promise<void> => {
     await adminaxios.delete(`dashboard/engineers/${id}/`);
 }
 
 
 // category services
 
-export const createCategory = async(data:createCategoryData):Promise<CategoryResponse>=>{
+export const createCategory = async (data: createCategoryData): Promise<CategoryResponse> => {
     const response = await adminaxios.post<CategoryResponse>('dashboard/service-categories/', data);
     return response.data;
 }
 
-export const getAllCategory = async():Promise<CategoryList[]>=>{
+export const getAllCategory = async (): Promise<CategoryList[]> => {
     const response = await adminaxios.get<CategoryList[]>('dashboard/service-categories/')
     return response.data;
 }
 
-export const getCategoryById = async(id:number):Promise<CategoryList>=>{
+export const getCategoryById = async (id: number): Promise<CategoryList> => {
     const response = await adminaxios.get<CategoryList>(`dashboard/service-categories/${id}/`)
     return response.data;
 }
 
-export const updateCategory = async(id:number, data:createCategoryData):Promise<CategoryResponse>=>{
+export const updateCategory = async (id: number, data: createCategoryData): Promise<CategoryResponse> => {
     const response = await adminaxios.put<CategoryResponse>(`dashboard/service-categories/${id}/`, data);
     return response.data;
 }
 
-export const deleteCategory = async(id:number):Promise<void> =>{
+export const deleteCategory = async (id: number): Promise<void> => {
     await adminaxios.delete(`dashboard/service-categories/${id}/`);
 }
+
+
+
+// services
+
+
+export const getAllServices = async (): Promise<ServiceResponse[]> => {
+    const response = await adminaxios.get<ServiceResponse[]>('services/allservices/');
+    return response.data
+}
+
+export const createService = async (data:CreateService):Promise<CreateService> => {
+    const response = await adminaxios.post<CreateService>("services/allservices/", data)
+    return response.data;
+
+}
+
+// export const deleteServiceById
