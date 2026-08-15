@@ -84,13 +84,19 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         return attrs
     
 class AdminServiceRequestSerializer(serializers.ModelSerializer):
+    customer_name = serializers.ReadOnlyField(source='customer.username')
+    engineer_name = serializers.ReadOnlyField(source = 'engineer.user.username')
+    service_name = serializers.ReadOnlyField(source = 'service.name')
     class Meta:
         model = BookingModel
         fields = [
             "id",
             "customer",
+            "customer_name",
             "engineer",
+            "engineer_name",
             "service",
+            "service_name",
             "description",
             "status",
             "booking_date",

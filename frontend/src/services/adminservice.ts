@@ -100,6 +100,20 @@ export interface CreateService {
     estimated_time: String
 }
 
+export interface ServiceRequestResponse {
+    id: number;
+    customer:number;
+    engineer:number;
+    service:number;
+    customer_name:String;
+    engineer_name:String;
+    service_name:String;
+    description: String
+    status:String;
+    created_at: String
+    booking_date: Date
+}
+
 export const createEngineer = async (data: EngineerData): Promise<EngineerResponse> => {
     const response = await adminaxios.post<EngineerResponse>('engineers/create/', data);
     return response.data;
@@ -156,7 +170,7 @@ export const getAllServices = async (): Promise<ServiceResponse[]> => {
     return response.data
 }
 
-export const createService = async (data:CreateService):Promise<CreateService> => {
+export const createService = async (data: CreateService): Promise<CreateService> => {
     const response = await adminaxios.post<CreateService>("services/allservices/", data)
     return response.data;
 
@@ -172,3 +186,11 @@ export const createService = async (data:CreateService):Promise<CreateService> =
 // }
 
 // export const deleteServiceById
+
+// service request
+
+export const getAllServiceRequest = async (): Promise<ServiceRequestResponse[]> => {
+    const response = await adminaxios.get<ServiceRequestResponse[]>('services/service-requests/');
+    return response.data
+
+}

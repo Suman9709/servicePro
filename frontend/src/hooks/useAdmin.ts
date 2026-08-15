@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createCategory, createEngineer, createService, deleteCategory, getAllCategory, getAllServices, getCategoryById, getEngineers, updateCategory, type CategoryList, type createCategoryData, type CreateService, type EngineerData, type EngineerListResponse, type ServiceResponse } from "../services/adminservice"
+import { createCategory, createEngineer, createService, deleteCategory, getAllCategory, getAllServiceRequest, getAllServices, getCategoryById, getEngineers, updateCategory, type CategoryList, type createCategoryData, type CreateService, type EngineerData, type EngineerListResponse, type ServiceRequestResponse, type ServiceResponse } from "../services/adminservice"
 
 
 export const useCreateEngineer = () => {
@@ -110,3 +110,12 @@ export const useCreateService = () => {
 //         }
 //     })
 // }
+
+
+export const useGetAllServiceRequest = () => {
+    return useQuery<ServiceRequestResponse[]>({
+        queryKey: ['service-request'],
+        queryFn: getAllServiceRequest,
+        retry: false
+    })
+}
