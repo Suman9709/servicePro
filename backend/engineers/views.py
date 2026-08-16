@@ -1,17 +1,20 @@
 from django.shortcuts import  get_object_or_404
 
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 from accounts.models import RegisterUserModel
 from services.models import BookingModel
 from services.serializers import ServiceHistorySerializer
 from engineers.models import EngineerProfile
-from engineers.serializers import CreateEngineerSerializer, EngineerProfileSerializer
+from engineers.serializers import CreateEngineerSerializer, EngineerProfileSerializer,EngineerRequestSerializer
+
 
 from accounts.permissions import IsAdmin, IsEngineer,IsEngineerOrAdmin
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from accounts.models import RegisterUserModel
+
 # Create your views here.
 
 
@@ -95,3 +98,18 @@ class CustomerServiceHistoryView(APIView):
         serializer = ServiceHistorySerializer(bookings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class EngineerGetAllService(ModelViewSet):
+    permission_classes = [IsAuthenticated, IsEngineer]
+    serializer_class  = EngineerRequestSerializer
+    def get_queryset(self):
+        return BookingModel.objects.filter(
+            engineer__user= self.request.user
+        ).select_related(
+            "customer",
+            "service",
+            "service__category",
+            "engineer",
+            "engineer__user",
+            )
+    def perform_update(self, serializer):
+        serializer.save()

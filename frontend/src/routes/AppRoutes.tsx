@@ -16,6 +16,9 @@ import Feedbacks from '../components/Feedbacks'
 import BookService from '../components/BookService'
 import CustomerDashboard from '../Pages/CustomerDashboard'
 import AllCustomerRequest from '../Pages/AllCustomerRequest'
+import EngineerDashboard from '../Pages/EngineerDashboard'
+import EngineerDashboardLayout from '../layout/EngineerDashboardLayout'
+import ManageEngineerService from '../components/ManageEngineerService'
 
 
 export const AppRoutes = () => {
@@ -46,6 +49,13 @@ export const AppRoutes = () => {
                 <Route path="manage-services" element={<ManageService />} />
                 <Route path="manage-service-requests" element={<ManageServiceRequest />} />
                 <Route path="feedbacks" element={<Feedbacks />} />
+            </Route>
+
+            {/* engineer */}
+            <Route path='/engineer' element={<EngineerDashboardLayout/>}>
+                <Route path="dashboard" element={<EngineerDashboard/>}/>
+                <Route  path ="manage-service" element={<ManageEngineerService />} />
+
             </Route>
 
 

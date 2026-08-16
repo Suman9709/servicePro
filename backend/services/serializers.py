@@ -94,6 +94,17 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
             })
 
         return attrs
+    def validate_status(self,value):
+        allowed_status=[
+            BookingModel.BookingStatus.ACCEPTED,
+            BookingModel.BookingStatus.COMPLETED,
+            BookingModel.BookingStatus.CANCELLED,
+        ]
+        if value is not allowed_status:
+            raise serializers.ValidationError(
+                "invalid status"
+            )
+        return value
     
 class AdminServiceRequestSerializer(serializers.ModelSerializer):
     customer_name = serializers.ReadOnlyField(source='customer.username')

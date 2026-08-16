@@ -2,6 +2,7 @@ from rest_framework import serializers
 from accounts.models import RegisterUserModel
 from django.db import transaction
 from .models import EngineerProfile
+from services.models import BookingModel, CategoryModel, ServiceModel
 from rest_framework.validators import UniqueValidator
 
 class EngineerProfileSerializer(serializers.ModelSerializer):
@@ -112,3 +113,61 @@ class CreateEngineerSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return EngineerProfileSerializer(instance, context=self.context).data
+    
+    
+class EngineerRequestSerializer(serializers.ModelSerializer):
+
+    customer_name = serializers.ReadOnlyField(
+        source="customer.username"
+    )
+
+    category_name = serializers.ReadOnlyField(
+        source="service.category.name"
+    )
+
+    service_name = serializers.ReadOnlyField(
+        source="service.name"
+    )
+
+    class Meta:
+        model = BookingModel
+
+        fields = [
+            "id",
+            "customer",
+            "customer_name",
+            "category_name",
+            "service",
+            "service_name",
+            "description",
+            "status",
+            "booking_date",
+            "created_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "customer",
+            "customer_name",
+            "category_name",
+            "service",
+            "service_name",
+            "description",
+            "booking_date",
+            "created_at",
+        ]
+
+    def validate_status(self, value):
+
+        allowed_status = [
+            BookingModel.BookingStatus.ACCEPTED,
+            BookingModel.BookingStatus.COMPLETED,
+            BookingModel.BookingStatus.CANCELLED,
+        ]
+
+        if value not in allowed_status:
+            raise serializers.ValidationError(
+                "Invalid status."
+            )
+
+        return value

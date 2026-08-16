@@ -3,7 +3,6 @@ import {
     WrenchIcon,
     ClockIcon,
     CheckCircleIcon,
-    ArrowRightIcon,
     PlusIcon,
 } from "@phosphor-icons/react";
 import { useBookingHistory } from "../hooks/useCustomer";
@@ -264,13 +263,7 @@ const CustomerDashboard = () => {
                         </p>
                     </div>
 
-                    <Link
-                        to="/booking-history"
-                        className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
-                    >
-                        View All
-                        <ArrowRightIcon size={16} />
-                    </Link>
+                    
 
                 </div>
 
@@ -281,7 +274,7 @@ const CustomerDashboard = () => {
 
                     <div className="overflow-x-auto">
 
-                        <table className="table w-full">
+                        <table className="table w-full overflow-y-auto">
 
                             <thead>
                                 <tr className="text-gray-600">
