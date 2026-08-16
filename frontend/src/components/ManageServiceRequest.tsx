@@ -8,20 +8,13 @@ import {
 } from "@phosphor-icons/react";
 
 import { useMemo, useState } from "react";
-import { useGetAllServiceRequest } from "../hooks/useAdmin";
+import { useAssignEngineer, useGetAllServiceRequest, useGetEngineers } from "../hooks/useAdmin";
 
 
 const ManageServiceRequest = () => {
-  // =====================================================
-  // STATE
-  // =====================================================
 
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
-
-  // =====================================================
-  // API
-  // =====================================================
 
   const {
     data: requests,
@@ -30,11 +23,11 @@ const ManageServiceRequest = () => {
     error,
   } = useGetAllServiceRequest();
   console.log(requests)
+  const { data: engineers } = useGetEngineers()
+  const assignEngineerMutation = useAssignEngineer()
 
-  // =====================================================
   // FILTER REQUESTS
-  // =====================================================
-
+ 
   const filteredRequests = useMemo(() => {
     if (!requests) {
       return [];
@@ -62,9 +55,8 @@ const ManageServiceRequest = () => {
     });
   }, [requests, search, selectedStatus]);
 
-  // =====================================================
+
   // STATISTICS
-  // =====================================================
 
   const totalRequests = requests?.length ?? 0;
 
@@ -83,9 +75,8 @@ const ManageServiceRequest = () => {
       (request) => request?.status === "completed"
     ).length ?? 0;
 
-  // =====================================================
+
   // LOADING
-  // =====================================================
 
   if (isLoading) {
     return (
@@ -97,9 +88,7 @@ const ManageServiceRequest = () => {
     );
   }
 
-  // =====================================================
   // ERROR
-  // =====================================================
 
   if (isError) {
     return (
@@ -123,16 +112,14 @@ const ManageServiceRequest = () => {
     );
   }
 
-  // =====================================================
+
   // UI
-  // =====================================================
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 text-black sm:p-6">
 
-      {/* ================================================= */}
+
       {/* HEADER */}
-      {/* ================================================= */}
 
       <div className="mb-6">
 
@@ -146,10 +133,7 @@ const ManageServiceRequest = () => {
 
       </div>
 
-
-      {/* ================================================= */}
       {/* STATISTICS */}
-      {/* ================================================= */}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
@@ -326,20 +310,7 @@ const ManageServiceRequest = () => {
                 onChange={(e) =>
                   setSearch(e.target.value)
                 }
-                className="
-                  input
-                  input-bordered
-                  w-full
-                  border-gray-300
-                  bg-white
-                  pl-10
-                  text-gray-900
-                  outline-none
-                  focus:border-blue-500
-                  focus:ring-2
-                  focus:ring-blue-100
-                "
-              />
+                className=" input input-bordered w-full border-gray-300 bg-white pl-10 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 " />
 
             </div>
 
@@ -351,16 +322,7 @@ const ManageServiceRequest = () => {
               onChange={(e) =>
                 setSelectedStatus(e.target.value)
               }
-              className="
-                select
-                select-bordered
-                w-full
-                border-gray-300
-                bg-white
-                text-gray-900
-                sm:w-48
-              "
-            >
+              className=" select select-bordered w-full border-gray-300 bg-white text-gray-900 sm:w-48">
 
               <option value="all">
                 All Status
@@ -420,16 +382,11 @@ const ManageServiceRequest = () => {
                 <th>
                   Status
                 </th>
-
                 <th>
                   Booking Date
                 </th>
-
               </tr>
-
             </thead>
-
-
             <tbody>
 
               {filteredRequests.map((request) => (
@@ -438,51 +395,27 @@ const ManageServiceRequest = () => {
                   key={request.id}
                   className="hover:bg-gray-50"
                 >
-
                   {/* CUSTOMER */}
-
                   <td>
 
                     <div className="flex items-center gap-3">
 
-                      <div className="
-                        flex
-                        h-10
-                        w-10
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-lg
-                        bg-gray-100
-                        text-gray-600
-                      ">
-
+                      <div className=" flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600">
                         <UserIcon
                           size={20}
                           weight="fill"
                         />
-
                       </div>
-
                       <div>
-
                         <p className="font-semibold text-gray-900">
                           {request?.customer_name}
                         </p>
-
-                        
-
                       </div>
-
                     </div>
-
                   </td>
-
-
                   {/* SERVICE */}
 
                   <td>
-
                     <div className="flex items-center gap-2">
 
                       <WrenchIcon
@@ -490,45 +423,46 @@ const ManageServiceRequest = () => {
                         className="text-blue-600"
                         weight="fill"
                       />
-
                       <div>
-
                         <p className="font-medium text-gray-900">
                           {request.service_name}
                         </p>
-
-                        
                       </div>
-
                     </div>
-
                   </td>
 
 
                   {/* ENGINEER */}
-
                   <td>
+                    <select
+                      value={request.engineer ?? ""}
+                      onChange={(e) => {
+                        const engineerId = Number(e.target.value);
 
-                    {request.engineer_name ? (
+                        if (!engineerId) return;
 
-                      <div>
+                        assignEngineerMutation.mutate({
+                          id: request.id,
+                          engineer: engineerId,
+                          status: request.status,
+                        });
+                      }}
+                      className="select select-sm w-40 border-gray-300 bg-white text-gray-900"
+                      disabled={assignEngineerMutation.isPending}
+                    >
+                      <option value="">
+                        Select Engineer
+                      </option>
 
-                        <p className="font-medium text-gray-900">
-                          {request.engineer_name}
-                        </p>
-
-                       
-
-                      </div>
-
-                    ) : (
-
-                      <span className="text-sm text-gray-400">
-                        Not assigned
-                      </span>
-
-                    )}
-
+                      {engineers?.map((engineer) => (
+                        <option
+                          key={engineer.id}
+                          value={engineer.id}
+                        >
+                          {engineer.username}
+                        </option>
+                      ))}
+                    </select>
                   </td>
 
 
@@ -546,39 +480,43 @@ const ManageServiceRequest = () => {
                   {/* STATUS */}
 
                   <td>
+                    <select
+                      value={request.status}
+                      onChange={(e) => {
+                        const status = e.target.value;
 
-                    {request.status === "pending" && (
+                        if (!request.engineer) {
+                          return;
+                        }
 
-                      <span className="badge border-yellow-200 bg-yellow-50 text-yellow-700">
+                        assignEngineerMutation.mutate({
+                          id: request.id,
+                          engineer: request.engineer,
+                          status,
+                        });
+                      }}
+                      className="select select-sm w-32 border-gray-300 bg-white text-gray-900"
+                      disabled={
+                        !request.engineer ||
+                        assignEngineerMutation.isPending
+                      }
+                    >
+                      <option value="pending">
                         Pending
-                      </span>
+                      </option>
 
-                    )}
-
-                    {request.status === "accepted" && (
-
-                      <span className="badge border-blue-200 bg-blue-50 text-blue-700">
+                      <option value="accepted">
                         Accepted
-                      </span>
+                      </option>
 
-                    )}
-
-                    {request.status === "completed" && (
-
-                      <span className="badge border-green-200 bg-green-50 text-green-700">
+                      <option value="completed">
                         Completed
-                      </span>
+                      </option>
 
-                    )}
-
-                    {request.status === "cancelled" && (
-
-                      <span className="badge border-red-200 bg-red-50 text-red-700">
+                      <option value="cancelled">
                         Cancelled
-                      </span>
-
-                    )}
-
+                      </option>
+                    </select>
                   </td>
 
 

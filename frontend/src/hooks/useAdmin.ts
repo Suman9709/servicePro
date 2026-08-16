@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createCategory, createEngineer, createService, deleteCategory, getAllCategory, getAllServiceRequest, getAllServices, getCategoryById, getEngineers, updateCategory, type CategoryList, type createCategoryData, type CreateService, type EngineerData, type EngineerListResponse, type ServiceRequestResponse, type ServiceResponse } from "../services/adminservice"
+import { assignEngineer, createCategory, createEngineer, createService, deleteCategory, getAllCategory, getAllServiceRequest, getAllServices, getCategoryById, getEngineers, updateCategory, type CategoryList, type createCategoryData, type CreateService, type EngineerData, type EngineerListResponse, type ServiceRequestResponse, type ServiceResponse } from "../services/adminservice"
 
 
 export const useCreateEngineer = () => {
@@ -23,6 +23,8 @@ export const useGetEngineers = () => {
 }
 
 
+
+// category
 export const useCreateCategory = () => {
     const queryClient = useQueryClient();
 
@@ -117,5 +119,23 @@ export const useGetAllServiceRequest = () => {
         queryKey: ['service-request'],
         queryFn: getAllServiceRequest,
         retry: false
+    })
+}
+
+
+
+interface AssignEngineerPayload {
+  id: number;
+  engineer: number;
+  status: string;
+}
+export const useAssignEngineer = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({id, engineer, status}:AssignEngineerPayload) => assignEngineer({engineer,status}, id),
+        onSuccess:()=>queryClient.invalidateQueries({
+            queryKey:(["service-request"])
+        })
+
     })
 }

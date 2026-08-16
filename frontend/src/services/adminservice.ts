@@ -102,17 +102,23 @@ export interface CreateService {
 
 export interface ServiceRequestResponse {
     id: number;
-    customer:number;
-    engineer:number;
-    service:number;
-    customer_name:string;
-    engineer_name:string;
-    service_name:string;
+    customer: number;
+    engineer: number;
+    service: number;
+    customer_name: string;
+    engineer_name: string;
+    service_name: string;
     description: string
-    status:string;
+    status: string;
     created_at: Date
     booking_date: Date
 }
+
+export interface AssignEngineer {
+    engineer: number;
+    status: string
+}
+
 
 export const createEngineer = async (data: EngineerData): Promise<EngineerResponse> => {
     const response = await adminaxios.post<EngineerResponse>('engineers/create/', data);
@@ -193,4 +199,12 @@ export const getAllServiceRequest = async (): Promise<ServiceRequestResponse[]> 
     const response = await adminaxios.get<ServiceRequestResponse[]>('services/service-requests/');
     return response.data
 
+}
+
+export const assignEngineer = async (data: AssignEngineer, id: number): Promise<AssignEngineer> => {
+    //  console.log("Sending to API:", data);
+
+    const response = await adminaxios.put<AssignEngineer>(`services/service-requests/${id}/`, data)
+    //   console.log("API response:", response.data);
+    return response.data
 }
