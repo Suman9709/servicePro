@@ -44,6 +44,14 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
         queryset=CategoryModel.objects.all(),
         write_only=True
     )
+    category_name = serializers.ReadOnlyField(
+        source="service.category.name"
+    )
+
+    service_name = serializers.ReadOnlyField(
+        source="service.name"
+    )
+
     service = serializers.PrimaryKeyRelatedField(
         queryset=ServiceModel.objects.all()
     )
@@ -56,7 +64,9 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
             "customer",
             "customer_name",
             "category",
+            'category_name',
             "service",
+            'service_name',
             "description",
             "status",
             "booking_date",
@@ -67,6 +77,8 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
             "id",
             "customer",
             "customer_name",
+            "category_name",
+            "service_name",
             "status",
             "booking_date",
             "created_at",

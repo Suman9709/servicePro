@@ -16,7 +16,7 @@ export const useLogin = () => {
         mutationFn: (data: LoginData) => login(data),
 
         onSuccess: async () => {
-            await queryClient.invalidateQueries({
+            await queryClient.refetchQueries({
                 queryKey: ["profile"]
             })
         }

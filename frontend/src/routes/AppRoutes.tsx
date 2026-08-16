@@ -13,6 +13,9 @@ import ManageService from '../components/ManageService'
 import ManageCategory from '../components/ManageCategory'
 import ManageServiceRequest from '../components/ManageServiceRequest'
 import Feedbacks from '../components/Feedbacks'
+import BookService from '../components/BookService'
+import CustomerDashboard from '../Pages/CustomerDashboard'
+import AllCustomerRequest from '../Pages/AllCustomerRequest'
 
 
 export const AppRoutes = () => {
@@ -30,6 +33,9 @@ export const AppRoutes = () => {
             <Route path="profile" element={<ProfileLayout />}>
                 <Route index element={<Profile />} />
                 <Route path="edit-profile" element={<EditProfile />} />
+                <Route path="book-service" element={<BookService/>}/>
+                <Route path ="dashboard" element={<CustomerDashboard/>}/>
+                <Route path ="all-request" element={<AllCustomerRequest/>}/>
             </Route>
 
             {/* admin route */}

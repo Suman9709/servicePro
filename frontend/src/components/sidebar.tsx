@@ -22,7 +22,7 @@ interface SidebarProps {
     username?: string;
     email?: string;
     profileImage?: string;
-    role?:string;
+    role?: string;
     onLogout?: () => void;
 }
 
@@ -42,11 +42,6 @@ const CalendarIcon = ({ size }: any) => (
 // Add missing icons (you need to import these from phosphor)
 
 
-const ClockIcon = ({ size }: any) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size} fill="currentColor">
-        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm1-8h4v2h-6V7h2v5z" />
-    </svg>
-);
 
 
 
@@ -155,30 +150,17 @@ const Sidebar = ({
             customer: [
                 {
                     label: "Dashboard",
-                    path: "/customer/dashboard",
-                    icon: <HouseIcon size={20} weight="fill" />,
-                },
-                {
-                    label: "My Bookings",
-                    path: "/customer/bookings",
-                    icon: <TicketIcon size={20} weight="fill" />,
-                },
-                {
-                    label: "Request Service",
-                    path: "/customer/request",
+                    path: "/profile/all-request",
                     icon: <WrenchIcon size={20} weight="fill" />,
                 },
+
                 {
-                    label: "Services",
-                    path: "/profile#services",
-                    icon: <FolderOpenIcon size={20} weight="fill" />,
-                    isHashLink: true,
+                    label: "My Bookings",
+                    path: "/profile/book-service",
+                    icon: <TicketIcon size={20} weight="fill" />,
                 },
-                {
-                    label: "My History",
-                    path: "/customer/history",
-                    icon: <ClockIcon size={20} weight="fill" />,
-                },
+
+
             ],
         };
 
@@ -199,8 +181,8 @@ const Sidebar = ({
     const renderNavLink = (item: NavItem) => {
         const active = isActive(item.path);
         const baseClasses = `flex items-center justify-between px-4 py-2.5 rounded-lg transition-all duration-200 ${active
-                ? 'bg-primary/10 text-primary font-medium'
-                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+            ? 'bg-primary/10 text-primary font-medium'
+            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
             }`;
 
         const content = (
@@ -211,7 +193,7 @@ const Sidebar = ({
                     </span>
                     <span className="text-sm">{item.label}</span>
                 </div>
-             
+
             </>
         );
 
@@ -332,7 +314,7 @@ const Sidebar = ({
 
                         {/* Navigation Menu */}
                         <div className="space-y-1">
-                            
+
                             {navItems.map((item, index) => (
                                 <div key={index}>
                                     {renderNavLink(item)}
